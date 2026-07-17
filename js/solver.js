@@ -1,48 +1,74 @@
-// ===============================
+// =======================================
 // Rubik Solver Pro
-// solver.js
-// ===============================
+// js/solver.js
+// =======================================
 
-// Solution Moves
 let solutionMoves = [];
-
-// Current Step
-let currentStep = 0;
+let solverReady = false;
 
 /**
- * Convert cubeState to solver format
+ * Initialize solver (Run only once)
  */
-function cubeStateToSolverString(cubeState) {
+function initializeSolver() {
 
-    // TODO:
-    // Convert cubeState into the format required
-    // by cube.js / solve.js library
+    if (solverReady) return;
 
-    return "";
+    Cube.initSolver();
+
+    solverReady = true;
+
+    console.log("Solver Initialized");
 
 }
 
 /**
- * Generate Solution
+ * Convert cubeState object to solver string
+ * Order: U R F D L B
+ */
+function cubeStateToSolverString(cubeState) {
+
+    return (
+        cubeState.U.join("") +
+        cubeState.R.join("") +
+        cubeState.F.join("") +
+        cubeState.D.join("") +
+        cubeState.L.join("") +
+        cubeState.B.join("")
+    );
+
+}
+
+/**
+ * Solve cube
  */
 function solveCube(cubeState) {
 
-    // Convert cube state
+    initializeSolver();
+
     const cubeString = cubeStateToSolverString(cubeState);
 
-    // TODO:
-    // Call cube solver library here
+    const cube = Cube.fromString(cubeString);
 
-    solutionMoves = [];
+    const solution = cube.solve();
 
-    currentStep = 0;
+    if (!solution) {
+
+        console.error("Unable to solve cube");
+
+        return [];
+
+    }
+
+    solutionMoves = solution.trim().split(/\s+/);
+
+    loadSolution(solutionMoves);
 
     return solutionMoves;
 
 }
 
 /**
- * Get All Moves
+ * Get solution array
  */
 function getSolutionMoves() {
 
@@ -51,52 +77,12 @@ function getSolutionMoves() {
 }
 
 /**
- * Get Current Move
+ * Reset solver
  */
-function getCurrentMove() {
+function resetSolver() {
 
-    if (currentStep >= solutionMoves.length)
-        return null;
+    solutionMoves = [];
 
-    return solutionMoves[currentStep];
-
-}
-
-/**
- * Next Move
- */
-function nextMove() {
-
-    if (currentStep < solutionMoves.length - 1) {
-
-        currentStep++;
-
-    }
-
-    return getCurrentMove();
-
-}
-
-/**
- * Previous Move
- */
-function previousMove() {
-
-    if (currentStep > 0) {
-
-        currentStep--;
-
-    }
-
-    return getCurrentMove();
-
-}
-
-/**
- * Reset Player
- */
-function resetSolution() {
-
-    currentStep = 0;
+    resetPlayer();
 
 }
