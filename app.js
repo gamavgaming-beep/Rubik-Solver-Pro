@@ -544,18 +544,29 @@ for (let x = -1; x <= 1; x++) {
             );
 
             cubie.position.set(
-                x * (cubieSize + gap),
-                y * (cubieSize + gap),
-                z * (cubieSize + gap)
-            );
-            
-            cubie.userData = {
-    x: x,
-    y: y,
-    z: z
+    x * (cubieSize + gap),
+    y * (cubieSize + gap),
+    z * (cubieSize + gap)
+);
+
+cubie.userData = {
+    x,
+    y,
+    z,
+
+    painted: [null, null, null, null, null, null],
+
+    stickers: [
+        { face: "R", index: -1 },
+        { face: "L", index: -1 },
+        { face: "U", index: -1 },
+        { face: "D", index: -1 },
+        { face: "F", index: -1 },
+        { face: "B", index: -1 }
+    ]
 };
 
-            rubiksCube.add(cubie);
+rubiksCube.add(cubie);
 
         }
     }
@@ -592,14 +603,24 @@ function onPointerDown(event) {
     const cubie = hit.object;
 
     // எந்த face-ஐ click செய்தோம்?
-    const faceIndex = Math.floor(hit.faceIndex / 2);
+const faceIndex = Math.floor(hit.faceIndex / 2);
 
-    // அந்த face-க்கு selected color apply செய்
-    cubie.material[faceIndex].color.setHex(
-        colorMap[appState.selectedColor]
-    );
+const previousColor = cubie.userData.painted[faceIndex];
 
-    showToast(appState.selectedColor + " Applied");
+if (previousColor) {
+    colorUsage[previousColor]--;
+}
+
+cubie.userData.painted[faceIndex] = appState.selectedColor;
+colorUsage[appState.selectedColor]++;
+
+cubie.material[faceIndex].color.setHex(
+    colorMap[appState.selectedColor]
+);
+
+updateColorCounters();
+
+showToast(appState.selectedColor + " Applied");
 
 }
 
