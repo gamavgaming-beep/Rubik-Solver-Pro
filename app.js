@@ -457,27 +457,79 @@ controls.enablePan = false;
 controls.minDistance = 5;
 controls.maxDistance = 12;
 
+
 /* ==========================================
-   Demo Cube
+   Rubik's Cube (27 Cubies)
 ========================================== */
 
-const geometry =
-    new THREE.BoxGeometry(2, 2, 2);
+const rubiksCube = new THREE.Group();
 
-const material =
-    new THREE.MeshStandardMaterial({
+const cubieSize = 0.95;
+const gap = 0.05;
 
-        color: 0xffffff
+const faceColors = {
+    U: 0xffffff, // White
+    D: 0xffff00, // Yellow
+    F: 0x00aa00, // Green
+    B: 0x0000ff, // Blue
+    R: 0xff0000, // Red
+    L: 0xff8800  // Orange
+};
 
-    });
+for (let x = -1; x <= 1; x++) {
+    for (let y = -1; y <= 1; y++) {
+        for (let z = -1; z <= 1; z++) {
 
-const demoCube =
-    new THREE.Mesh(
-        geometry,
-        material
-    );
+            const materials = [
 
-scene.add(demoCube);
+                new THREE.MeshStandardMaterial({
+                    color: x === 1 ? faceColors.R : 0x222222
+                }),
+
+                new THREE.MeshStandardMaterial({
+                    color: x === -1 ? faceColors.L : 0x222222
+                }),
+
+                new THREE.MeshStandardMaterial({
+                    color: y === 1 ? faceColors.U : 0x222222
+                }),
+
+                new THREE.MeshStandardMaterial({
+                    color: y === -1 ? faceColors.D : 0x222222
+                }),
+
+                new THREE.MeshStandardMaterial({
+                    color: z === 1 ? faceColors.F : 0x222222
+                }),
+
+                new THREE.MeshStandardMaterial({
+                    color: z === -1 ? faceColors.B : 0x222222
+                })
+
+            ];
+
+            const cubie = new THREE.Mesh(
+                new THREE.BoxGeometry(
+                    cubieSize,
+                    cubieSize,
+                    cubieSize
+                ),
+                materials
+            );
+
+            cubie.position.set(
+                x * (cubieSize + gap),
+                y * (cubieSize + gap),
+                z * (cubieSize + gap)
+            );
+
+            rubiksCube.add(cubie);
+
+        }
+    }
+}
+
+scene.add(rubiksCube);
 
 /* ==========================================
    Animation Loop
