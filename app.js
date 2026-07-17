@@ -266,7 +266,13 @@ function updateColorCounters() {
     Object.keys(colorUsage).forEach(color => {
 
         colorCounters[color].textContent =
-            `${colorUsage[color]} / 9`;
+            `${colorUsage[color]}/9`;
+
+        const button =
+            document.querySelector(`[data-color="${color}"]`);
+
+        button.disabled =
+            colorUsage[color] >= 9;
 
     });
 
