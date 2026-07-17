@@ -474,7 +474,7 @@ solveBtn.addEventListener("click", () => {
         return;
     }
 
-    solveCube();
+    solveCube(cubeState);
 
 });
 
@@ -604,13 +604,14 @@ const controls = new OrbitControls(
     renderer.domElement
 );
 
-controls.enableDamping = true;
-controls.dampingFactor = 0.08;
+controls.enableDamping = false;
 
+controls.enableRotate = false;
+controls.enableZoom = false;
 controls.enablePan = false;
 
-controls.minDistance = 5;
-controls.maxDistance = 12;
+camera.position.set(6,6,6);
+camera.lookAt(0,0,0);
 
 
 /* ==========================================
@@ -621,15 +622,6 @@ const rubiksCube = new THREE.Group();
 
 const cubieSize = 0.95;
 const gap = 0.05;
-
-const faceColors = {
-    U: 0xffffff, // White
-    D: 0xffff00, // Yellow
-    F: 0x00aa00, // Green
-    B: 0x0000ff, // Blue
-    R: 0xff0000, // Red
-    L: 0xff8800  // Orange
-};
 
 const colorMap = {
     white: 0xffffff,
@@ -762,8 +754,6 @@ showToast(appState.selectedColor + " Applied");
 function animate() {
 
     requestAnimationFrame(animate);
-
-    controls.update();
 
     renderer.render(
         scene,
