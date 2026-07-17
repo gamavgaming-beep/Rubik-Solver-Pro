@@ -646,31 +646,14 @@ for (let x = -1; x <= 1; x++) {
 
             const materials = [
 
-                new THREE.MeshStandardMaterial({
-                    color: x === 1 ? faceColors.R : 0x222222
-                }),
+    new THREE.MeshStandardMaterial({ color: 0x222222 }),
+    new THREE.MeshStandardMaterial({ color: 0x222222 }),
+    new THREE.MeshStandardMaterial({ color: 0x222222 }),
+    new THREE.MeshStandardMaterial({ color: 0x222222 }),
+    new THREE.MeshStandardMaterial({ color: 0x222222 }),
+    new THREE.MeshStandardMaterial({ color: 0x222222 })
 
-                new THREE.MeshStandardMaterial({
-                    color: x === -1 ? faceColors.L : 0x222222
-                }),
-
-                new THREE.MeshStandardMaterial({
-                    color: y === 1 ? faceColors.U : 0x222222
-                }),
-
-                new THREE.MeshStandardMaterial({
-                    color: y === -1 ? faceColors.D : 0x222222
-                }),
-
-                new THREE.MeshStandardMaterial({
-                    color: z === 1 ? faceColors.F : 0x222222
-                }),
-
-                new THREE.MeshStandardMaterial({
-                    color: z === -1 ? faceColors.B : 0x222222
-                })
-
-            ];
+];
 
             const cubie = new THREE.Mesh(
                 new THREE.BoxGeometry(
