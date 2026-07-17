@@ -79,9 +79,26 @@ async function startSplash() {
 
     splashScreen.classList.add("hidden");
 
-    mainApp.classList.remove("hidden");
+mainApp.classList.remove("hidden");
 
-    showToast("Welcome to Rubik Solver Pro");
+setTimeout(() => {
+
+    camera.aspect =
+        viewer.clientWidth /
+        viewer.clientHeight;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+        viewer.clientWidth,
+        viewer.clientHeight
+    );
+
+    renderer.render(scene, camera);
+
+}, 100);
+
+showToast("Welcome to Rubik Solver Pro");
 
 }
 
