@@ -532,6 +532,53 @@ for (let x = -1; x <= 1; x++) {
 scene.add(rubiksCube);
 
 /* ==========================================
+   Raycaster
+========================================== */
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+renderer.domElement.addEventListener(
+    "pointerdown",
+    onPointerDown
+);
+
+function onPointerDown(event) {
+
+    const rect =
+        renderer.domElement.getBoundingClientRect();
+
+    mouse.x =
+        ((event.clientX - rect.left) / rect.width) * 2 - 1;
+
+    mouse.y =
+        -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(
+        mouse,
+        camera
+    );
+
+    const intersects =
+        raycaster.intersectObjects(
+            rubiksCube.children
+        );
+
+    if (intersects.length === 0) return;
+
+    const clickedCubie =
+        intersects[0].object;
+
+    console.log(
+        "Cubie Clicked:",
+        clickedCubie
+    );
+
+    showToast("Cubie Selected");
+
+}
+
+/* ==========================================
    Animation Loop
 ========================================== */
 
