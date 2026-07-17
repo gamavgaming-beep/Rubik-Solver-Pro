@@ -2,193 +2,194 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
+    <title>Rubik Solver Pro</title>
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta
+        name="description"
+        content="Professional 3D Rubik Cube Solver using Three.js">
 
-<title>Rubik Solver Pro</title>
+    <meta
+        name="theme-color"
+        content="#0f172a">
 
-<meta name="description"
-content="Professional 3D Rubik Cube Solver">
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes">
 
-<meta name="theme-color"
-content="#4f46e5">
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="black">
 
-<link rel="preconnect"
-href="https://fonts.googleapis.com">
+    <meta
+        name="apple-mobile-web-app-title"
+        content="Rubik Solver Pro">
 
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
+    <link
+        rel="manifest"
+        href="manifest.json">
 
-<link
-href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-rel="stylesheet">
+    <link
+        rel="icon"
+        href="assets/icons/icon-192.png">
 
-<link rel="stylesheet"
-href="style.css">
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com">
 
-<link rel="stylesheet"
-href="css/mobile.css">
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
 
-<link rel="stylesheet"
-href="css/desktop.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
+    <link
+        rel="stylesheet"
+        href="style.css">
+
+    <link
+        rel="stylesheet"
+        href="css/mobile.css">
+
+    <link
+        rel="stylesheet"
+        href="css/desktop.css">
 </head>
 
 <body>
 
-<div class="background"></div>
+<div id="app">
 
-<div class="app">
+<!-- ===================================================== -->
+<!-- Splash Screen -->
+<!-- ===================================================== -->
 
-<!-- =========================
-     Header
-========================= -->
+<section id="splash-screen">
 
-<header class="topbar">
+    <div class="logo-area">
 
-<div class="logo">
+        <img
+            src="assets/images/logo.png"
+            alt="Rubik Solver">
 
-🧩 Rubik Solver Pro
+        <h1>Rubik Solver Pro</h1>
+
+        <p>
+            Professional 3D Cube Solver
+        </p>
+
+    </div>
+
+    <div class="loading-bar">
+
+        <div id="loading-progress"></div>
+
+    </div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- Main Application -->
+<!-- ===================================================== -->
+
+<main id="main-app" class="hidden">
+
+<!-- ===================================================== -->
+<!-- Header -->
+<!-- ===================================================== -->
+
+<header>
+
+<div class="left">
+
+<h2>Rubik Solver Pro</h2>
 
 </div>
 
-<nav class="top-actions">
+<div class="right">
 
-<button id="themeBtn"
-title="Theme">
+<button id="theme-btn">
 
 🌙
 
 </button>
 
-<button id="resetBtn"
-title="Reset Cube">
+<button id="settings-btn">
 
-Reset
+⚙️
 
 </button>
 
-</nav>
+<button id="install-btn">
+
+Install
+
+</button>
+
+</div>
 
 </header>
 
-<!-- =========================
-     Main Layout
-========================= -->
+<!-- ===================================================== -->
+<!-- PAGE 1 -->
+<!-- Cube Editor -->
+<!-- ===================================================== -->
 
-<main class="layout">
+<section id="editor-page">
 
-<!-- =========================
-     Left Sidebar
-========================= -->
+<div class="editor-layout">
 
-<aside class="sidebar">
+<!-- LEFT PANEL -->
 
-<h2>
+<div class="left-panel">
 
-Cube Setup
+<h3>
 
-</h2>
+3D Cube
 
-<p class="subtitle">
+</h3>
 
-Customize your cube
+<div id="viewer">
 
-</p>
-
-<div class="progress-card">
-
-<p>
-
-Progress
-
-</p>
-
-<div class="progress">
-
-<div id="progressBar">
+<!-- Three.js Canvas -->
 
 </div>
 
-</div>
+<div class="progress-box">
 
-<span id="progressText">
+<span>
 
-0%
+Face
+
+</span>
+
+<span id="face-counter">
+
+1 / 6
 
 </span>
 
 </div>
 
-<div class="toolbox">
+<progress
+value="1"
+max="6"
+id="face-progress">
 
-<button id="scrambleBtn">
-
-Random Scramble
-
-</button>
-
-<button id="clearBtn">
-
-Clear Cube
-
-</button>
-
-<button id="solveBtn">
-
-Solve Cube
-
-</button>
+</progress>
 
 </div>
 
-</aside>
+<!-- RIGHT PANEL -->
 
-<!-- =========================
-     Center Workspace
-========================= -->
-
-<section class="workspace">
-
-<div class="workspace-header">
-
-<h1>
-
-3D Cube Editor
-
-</h1>
-
-<p>
-
-Drag the cube, tap stickers and choose colors.
-
-</p>
-
-</div>
-
-<!-- =========================
-     Three.js Cube Canvas
-========================= -->
-
-<div class="cube-card">
-
-<div id="cubeContainer">
-
-<canvas id="cubeCanvas"></canvas>
-
-</div>
-
-</div>
-
-<!-- =========================
-     Color Picker
-========================= -->
-
-<div class="color-panel">
+<div class="right-panel">
 
 <h3>
 
@@ -196,31 +197,112 @@ Color Picker
 
 </h3>
 
-<div class="color-picker">
+<div id="color-picker">
+     <!-- ===================================================== -->
+<!-- Color Picker -->
+<!-- ===================================================== -->
 
-<button class="color white"
-data-color="U"
-title="White"></button>
+<div class="color-grid">
 
-<button class="color yellow"
-data-color="D"
-title="Yellow"></button>
+<button class="color-btn white" data-color="white">
+    <span class="color-circle"></span>
+    <span class="color-name">White</span>
+    <span id="count-white">0 / 9</span>
+</button>
 
-<button class="color red"
-data-color="R"
-title="Red"></button>
+<button class="color-btn yellow" data-color="yellow">
+    <span class="color-circle"></span>
+    <span class="color-name">Yellow</span>
+    <span id="count-yellow">0 / 9</span>
+</button>
 
-<button class="color orange"
-data-color="L"
-title="Orange"></button>
+<button class="color-btn red" data-color="red">
+    <span class="color-circle"></span>
+    <span class="color-name">Red</span>
+    <span id="count-red">0 / 9</span>
+</button>
 
-<button class="color green"
-data-color="F"
-title="Green"></button>
+<button class="color-btn orange" data-color="orange">
+    <span class="color-circle"></span>
+    <span class="color-name">Orange</span>
+    <span id="count-orange">0 / 9</span>
+</button>
 
-<button class="color blue"
-data-color="B"
-title="Blue"></button>
+<button class="color-btn blue" data-color="blue">
+    <span class="color-circle"></span>
+    <span class="color-name">Blue</span>
+    <span id="count-blue">0 / 9</span>
+</button>
+
+<button class="color-btn green" data-color="green">
+    <span class="color-circle"></span>
+    <span class="color-name">Green</span>
+    <span id="count-green">0 / 9</span>
+</button>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- Face Navigation -->
+<!-- ===================================================== -->
+
+<div class="editor-controls">
+
+<button id="previous-face">
+
+⏮ Previous
+
+</button>
+
+<button id="next-face">
+
+Next ⏭
+
+</button>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- Cube Status -->
+<!-- ===================================================== -->
+
+<div class="cube-status">
+
+<p>
+
+Filled Stickers
+
+</p>
+
+<h2 id="filled-count">
+
+0 / 54
+
+</h2>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- Validate + Solve -->
+<!-- ===================================================== -->
+
+<div class="action-buttons">
+
+<button id="validate-btn">
+
+✅ Validate Cube
+
+</button>
+
+<button
+id="solve-btn"
+disabled>
+
+🚀 Solve Cube
+
+</button>
+
+</div>
 
 </div>
 
@@ -228,151 +310,172 @@ title="Blue"></button>
 
 </section>
 
-<!-- =========================
-     Right Panel
-========================= -->
+<!-- ===================================================== -->
+<!-- Loading Screen -->
+<!-- ===================================================== -->
 
-<aside class="right-panel">
+<section
+id="loading-page"
+class="hidden">
 
-<div class="status-card">
+<div class="loading-container">
 
 <h2>
 
-Cube Status
+Checking Cube...
 
 </h2>
 
-<p>
+<div class="loading-spinner"></div>
 
-Status
+<p id="loading-status">
+
+Validating colors...
 
 </p>
 
-<h3 id="cubeStatus">
+<div class="loading-progress">
 
-Waiting...
-
-</h3>
+<div id="loading-fill"></div>
 
 </div>
 
-<div class="stats-card">
+</div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- PAGE 2 -->
+<!-- Solver Player -->
+<!-- ===================================================== -->
+
+<section
+id="solver-page"
+class="hidden">
+
+<div class="solver-layout">
+
+<div class="solver-left">
 
 <h2>
 
-Statistics
+3D Cube
 
 </h2>
 
-<div class="stat-row">
+<div id="solver-viewer">
 
-<span>Moves</span>
-
-<strong id="moveCount">
-
-0
-
-</strong>
-
-</div>
-
-<div class="stat-row">
-
-<span>Current Step</span>
-
-<strong id="currentStep">
-
-0
-
-</strong>
-
-</div>
-
-<div class="stat-row">
-
-<span>Time</span>
-
-<strong id="solveTime">
-
-00:00
-
-</strong>
+<!-- Three.js -->
 
 </div>
 
 </div>
 
-</aside>
-
-</main>
-
-<!-- =========================
-     Solution Panel
-========================= -->
-
-<section id="solutionPanel">
-
-<div class="panel-card">
+<div class="solver-right">
 
 <h2>
 
-Solution
+Current Move
 
 </h2>
 
-<p id="moveInfo">
+<h1 id="current-move">
 
-Move 0 / 0
-
-</p>
-
-<h1 id="currentMove">
-
--
+R
 
 </h1>
 
+<p id="move-counter">
+
+Move 1 / 21
+
+</p>
+
+     <!-- ===================================================== -->
+<!-- Player Controls -->
+<!-- ===================================================== -->
+
 <div class="player-controls">
 
-<button id="previousMove">
+    <button id="player-previous">
+        ⏮ Previous
+    </button>
 
-⏮
+    <button id="player-play">
+        ▶ Play
+    </button>
 
-</button>
+    <button id="player-pause">
+        ⏸ Pause
+    </button>
 
-<button id="playPause">
-
-▶
-
-</button>
-
-<button id="nextMove">
-
-⏭
-
-</button>
+    <button id="player-next">
+        Next ⏭
+    </button>
 
 </div>
 
-<div class="speed-control">
+<!-- ===================================================== -->
+<!-- Animation Speed -->
+<!-- ===================================================== -->
 
-<label for="speedSelect">
+<div class="speed-box">
 
-Speed
+    <h3>Animation Speed</h3>
 
-</label>
+    <select id="speed-select">
 
-<select id="speedSelect">
+        <option value="slow">
+            Slow
+        </option>
 
-<option value="0.5">0.5x</option>
+        <option value="normal" selected>
+            Normal
+        </option>
 
-<option value="1" selected>1x</option>
+        <option value="fast">
+            Fast
+        </option>
 
-<option value="2">2x</option>
+    </select>
 
-<option value="4">4x</option>
+</div>
 
-</select>
+<!-- ===================================================== -->
+<!-- Statistics -->
+<!-- ===================================================== -->
+
+<div class="statistics-box">
+
+    <h3>Statistics</h3>
+
+    <div class="stat-item">
+        <span>Total Moves</span>
+        <strong id="stats-moves">0</strong>
+    </div>
+
+    <div class="stat-item">
+        <span>Elapsed Time</span>
+        <strong id="stats-time">0.0 s</strong>
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- Algorithm List -->
+<!-- ===================================================== -->
+
+<div class="algorithm-box">
+
+    <h3>Algorithm</h3>
+
+    <div id="algorithm-list">
+
+        Waiting for solution...
+
+    </div>
+
+</div>
 
 </div>
 
@@ -380,49 +483,65 @@ Speed
 
 </section>
 
+<!-- ===================================================== -->
+<!-- Finish Screen -->
+<!-- ===================================================== -->
+
+<section id="finish-page" class="hidden">
+
+    <div class="finish-container">
+
+        <h1>
+            🎉 Cube Solved
+        </h1>
+
+        <p>
+            Congratulations!
+        </p>
+
+        <div class="finish-stats">
+
+            <p>
+                Time :
+                <span id="finish-time">
+                    0.0 s
+                </span>
+            </p>
+
+            <p>
+                Moves :
+                <span id="finish-moves">
+                    0
+                </span>
+            </p>
+
+        </div>
+
+        <button id="solve-again">
+
+            Solve Another Cube
+
+        </button>
+
+    </div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- Toast Notification -->
+<!-- ===================================================== -->
+
+<div id="toast"></div>
+
+<!-- ===================================================== -->
+<!-- JavaScript -->
+<!-- ===================================================== -->
+
+<script type="module" src="app.js"></script>
+
+</main>
+
 </div>
-
-<footer>
-
-<p>
-
-© 2026 Rubik Solver Pro
-
-</p>
-
-</footer>
-
-<!-- =========================
-     Libraries
-========================= -->
-
-<script src="https://unpkg.com/three@0.179.1/build/three.min.js"></script>
-
-<script src="lib/cube.js"></script>
-
-<script src="lib/solve.js"></script>
-
-<!-- =========================
-     Project Scripts
-========================= -->
-
-<script src="js/cube-engine.js"></script>
-
-<script src="js/cube-editor.js"></script>
-
-<script src="js/color-picker.js"></script>
-
-<script src="js/solver.js"></script>
-
-<script src="js/animation.js"></script>
-
-<script src="js/player.js"></script>
-
-<script src="js/viewer.js"></script>
-
-<script src="js/ui.js"></script>
-
-<script src="app.js"></script>
 
 </body>
 
