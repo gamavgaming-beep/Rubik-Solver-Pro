@@ -1,13 +1,413 @@
-/* ==========================================
+/* =======================================================
    Rubik Solver Pro
-   mobile.css
-========================================== */
+   Mobile Styles
+   320px - 768px
+======================================================= */
 
-/*
-   Mobile specific styles.
+@media (max-width:768px){
 
-   Reserved for future updates.
+/* ==========================
+   Header
+========================== */
 
-   Responsive layout is currently handled
-   inside style.css.
-*/
+header{
+
+    height:auto;
+
+    padding:15px;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+header h2{
+
+    font-size:1.3rem;
+
+    text-align:center;
+
+}
+
+header .right{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+}
+
+header button{
+
+    flex:1;
+
+    min-width:90px;
+
+}
+
+/* ==========================
+   Editor Layout
+========================== */
+
+.editor-layout{
+
+    display:flex;
+
+    flex-direction:column;
+
+    padding:15px;
+
+    gap:20px;
+
+}
+
+/* ==========================
+   Panels
+========================== */
+
+.left-panel,
+.right-panel{
+
+    padding:15px;
+
+}
+
+/* ==========================
+   Viewer
+========================== */
+
+#viewer{
+
+    height:300px;
+
+}
+
+#solver-viewer{
+
+    height:300px;
+
+}
+
+/* ==========================
+   Progress
+========================== */
+
+.progress-box{
+
+    font-size:.9rem;
+
+}
+
+}
+
+@media (max-width:768px){
+
+/* =======================================================
+   Color Picker
+======================================================= */
+
+.color-grid{
+
+    grid-template-columns:1fr;
+
+    gap:12px;
+
+}
+
+.color-btn{
+
+    padding:16px;
+
+    font-size:1rem;
+
+}
+
+.color-circle{
+
+    width:28px;
+
+    height:28px;
+
+}
+
+/* =======================================================
+   Face Navigation
+======================================================= */
+
+.editor-controls{
+
+    flex-direction:column;
+
+    gap:12px;
+
+}
+
+.editor-controls button{
+
+    width:100%;
+
+    padding:16px;
+
+    font-size:1rem;
+
+}
+
+/* =======================================================
+   Cube Status
+======================================================= */
+
+.cube-status{
+
+    padding:20px;
+
+}
+
+#filled-count{
+
+    font-size:2.2rem;
+
+}
+
+/* =======================================================
+   Action Buttons
+======================================================= */
+
+.action-buttons{
+
+    gap:12px;
+
+}
+
+#validate-btn,
+#solve-btn{
+
+    width:100%;
+
+    padding:16px;
+
+    font-size:1rem;
+
+}
+
+/* =======================================================
+   Loading Screen
+======================================================= */
+
+.loading-container{
+
+    width:95%;
+
+    padding:24px;
+
+}
+
+.loading-spinner{
+
+    width:60px;
+
+    height:60px;
+
+}
+
+/* =======================================================
+   Solver Layout
+======================================================= */
+
+.solver-layout{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+    padding:15px;
+
+}
+
+.solver-left,
+.solver-right{
+
+    padding:15px;
+
+}
+
+}
+
+@media (max-width:768px){
+
+/* =======================================================
+   Player Controls
+======================================================= */
+
+.player-controls{
+
+    grid-template-columns:1fr 1fr;
+
+    gap:12px;
+
+}
+
+.player-controls button{
+
+    width:100%;
+
+    padding:15px;
+
+    font-size:1rem;
+
+}
+
+/* =======================================================
+   Current Move
+======================================================= */
+
+#current-move{
+
+    font-size:3rem;
+
+}
+
+#move-counter{
+
+    font-size:.95rem;
+
+}
+
+/* =======================================================
+   Speed Box
+======================================================= */
+
+#speed-select{
+
+    font-size:1rem;
+
+    padding:14px;
+
+}
+
+/* =======================================================
+   Statistics
+======================================================= */
+
+.statistics-box{
+
+    padding:16px;
+
+}
+
+.stat-item{
+
+    font-size:.95rem;
+
+}
+
+/* =======================================================
+   Algorithm
+======================================================= */
+
+#algorithm-list{
+
+    max-height:180px;
+
+    font-size:.9rem;
+
+    word-break:break-word;
+
+}
+
+/* =======================================================
+   Finish Screen
+======================================================= */
+
+.finish-container{
+
+    width:95%;
+
+    padding:24px;
+
+}
+
+.finish-container h1{
+
+    font-size:2rem;
+
+}
+
+#solve-again{
+
+    width:100%;
+
+    padding:16px;
+
+}
+
+/* =======================================================
+   Toast
+======================================================= */
+
+#toast{
+
+    width:90%;
+
+    text-align:center;
+
+    font-size:.95rem;
+
+}
+
+/* =======================================================
+   Small Phones (320px–480px)
+======================================================= */
+
+@media (max-width:480px){
+
+    header h2{
+
+        font-size:1.1rem;
+
+    }
+
+    #viewer,
+    #solver-viewer{
+
+        height:240px;
+
+    }
+
+    .player-controls{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .color-btn{
+
+        font-size:.9rem;
+
+        padding:14px;
+
+    }
+
+    #current-move{
+
+        font-size:2.4rem;
+
+    }
+
+    #filled-count{
+
+        font-size:1.8rem;
+
+    }
+
+}
+
+}
