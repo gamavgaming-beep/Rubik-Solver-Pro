@@ -454,8 +454,9 @@ header button:hover{
 }
 
 .yellow .color-circle{
+    background:#ffd600;
+}
 
-    background:#ffd600
 
 /* =======================================================
    Loading Page
@@ -631,7 +632,7 @@ header button:hover{
 ======================================================= */
 
 .player-controls{
-
+}
 
 /* =======================================================
    Dark / Light Theme
@@ -831,3 +832,79 @@ button:disabled{
 /* =======================================================
    End of File
 ======================================================= */
+
+/* ==========================================
+   Compact Color Picker
+========================================== */
+
+.compact-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin:20px 0;
+}
+
+.color-btn{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    padding:14px;
+
+    border:none;
+    border-radius:18px;
+
+    background:#263246;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.color-btn:hover{
+    transform:translateY(-2px);
+}
+
+.color-btn.active{
+    border:3px solid #00d4ff;
+    box-shadow:0 0 18px #00d4ff66;
+}
+
+.color-circle{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:3px solid #ffffff;
+}
+
+.white .color-circle{
+    background:#ffffff;
+}
+
+.yellow .color-circle{
+    background:#ffd500;
+}
+
+.red .color-circle{
+    background:#ff2a2a;
+}
+
+.orange .color-circle{
+    background:#ff8800;
+}
+
+.blue .color-circle{
+    background:#005eff;
+}
+
+.green .color-circle{
+    background:#00b140;
+}
+
+.color-count{
+    margin-top:10px;
+    font-size:15px;
+    font-weight:700;
+    color:#fff;
+}
