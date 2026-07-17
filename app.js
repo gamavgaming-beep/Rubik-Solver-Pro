@@ -1,4 +1,5 @@
-"use strict";
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 /* ==========================================
    Rubik Solver Pro
@@ -381,3 +382,134 @@ function refreshEditor() {
 }
 
 refreshEditor();
+/* ==========================================
+   Three.js Scene Setup
+========================================== */
+
+const viewer = document.getElementById("viewer");
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x101826);
+
+const camera = new THREE.PerspectiveCamera(
+    45,
+    viewer.clientWidth / viewer.clientHeight,
+    0.1,
+    1000
+);
+
+camera.position.set(6, 6, 6);
+
+const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true
+});
+
+renderer.setPixelRatio(window.devicePixelRatio);
+
+renderer.setSize(
+    viewer.clientWidth,
+    viewer.clientHeight
+);
+
+viewer.appendChild(renderer.domElement);
+
+/* ==========================================
+   Lights
+========================================== */
+
+const ambientLight = new THREE.AmbientLight(
+    0xffffff,
+    2
+);
+
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(
+    0xffffff,
+    3
+);
+
+directionalLight.position.set(5, 10, 7);
+
+scene.add(directionalLight);
+
+/* ==========================================
+   Orbit Controls
+========================================== */
+
+const controls = new OrbitControls(
+    camera,
+    renderer.domElement
+);
+
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+
+controls.enablePan = false;
+
+controls.minDistance = 5;
+controls.maxDistance = 12;
+
+/* ==========================================
+   Demo Cube
+========================================== */
+
+const geometry =
+    new THREE.BoxGeometry(2, 2, 2);
+
+const material =
+    new THREE.MeshStandardMaterial({
+
+        color: 0xffffff
+
+    });
+
+const demoCube =
+    new THREE.Mesh(
+        geometry,
+        material
+    );
+
+scene.add(demoCube);
+
+/* ==========================================
+   Animation Loop
+========================================== */
+
+function animate() {
+
+    requestAnimationFrame(animate);
+
+    controls.update();
+
+    renderer.render(
+        scene,
+        camera
+    );
+
+}
+
+animate();
+
+/* ==========================================
+   Window Resize
+========================================== */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        camera.aspect =
+            viewer.clientWidth /
+            viewer.clientHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+            viewer.clientWidth,
+            viewer.clientHeight
+        );
+
+    }
+);
