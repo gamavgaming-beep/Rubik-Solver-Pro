@@ -493,6 +493,15 @@ const faceColors = {
     L: 0xff8800  // Orange
 };
 
+const colorMap = {
+    white: 0xffffff,
+    yellow: 0xffff00,
+    red: 0xff0000,
+    orange: 0xff8800,
+    blue: 0x0000ff,
+    green: 0x00aa00
+};
+
 for (let x = -1; x <= 1; x++) {
     for (let y = -1; y <= 1; y++) {
         for (let z = -1; z <= 1; z++) {
@@ -539,6 +548,12 @@ for (let x = -1; x <= 1; x++) {
                 y * (cubieSize + gap),
                 z * (cubieSize + gap)
             );
+            
+            cubie.userData = {
+    x: x,
+    y: y,
+    z: z
+};
 
             rubiksCube.add(cubie);
 
@@ -562,36 +577,29 @@ renderer.domElement.addEventListener(
 
 function onPointerDown(event) {
 
-    const rect =
-        renderer.domElement.getBoundingClientRect();
+    const rect = renderer.domElement.getBoundingClientRect();
 
-    mouse.x =
-        ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
-    mouse.y =
-        -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
 
-    raycaster.setFromCamera(
-        mouse,
-        camera
-    );
-
-    const intersects =
-        raycaster.intersectObjects(
-            rubiksCube.children
-        );
+    const intersects = raycaster.intersectObjects(rubiksCube.children);
 
     if (intersects.length === 0) return;
 
-    const clickedCubie =
-        intersects[0].object;
+    const hit = intersects[0];
+    const cubie = hit.object;
 
-    console.log(
-        "Cubie Clicked:",
-        clickedCubie
+    // எந்த face-ஐ click செய்தோம்?
+    const faceIndex = Math.floor(hit.faceIndex / 2);
+
+    // அந்த face-க்கு selected color apply செய்
+    cubie.material[faceIndex].color.setHex(
+        colorMap[appState.selectedColor]
     );
 
-    showToast("Cubie Selected");
+    showToast(appState.selectedColor + " Applied");
 
 }
 
