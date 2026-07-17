@@ -389,6 +389,96 @@ function updateValidateButton() {
 }
 
 /* ==========================================
+   Cube Validation
+========================================== */
+
+function validateCube() {
+
+    const counts = {
+        U: 0,
+        R: 0,
+        F: 0,
+        D: 0,
+        L: 0,
+        B: 0
+    };
+
+    for (const face of Object.keys(cubeState)) {
+
+        for (const sticker of cubeState[face]) {
+
+            if (sticker === null) {
+
+                showToast("Complete all 54 stickers.");
+
+                return false;
+
+            }
+
+            if (!(sticker in counts)) {
+
+                showToast("Invalid sticker detected.");
+
+                return false;
+
+            }
+
+            counts[sticker]++;
+
+        }
+
+    }
+
+    for (const face of Object.keys(counts)) {
+
+        if (counts[face] !== 9) {
+
+            showToast(`${face} color must appear exactly 9 times.`);
+
+            return false;
+
+        }
+
+    }
+
+    appState.cubeValidated = true;
+
+    showToast("Cube validation successful.");
+
+    return true;
+
+}
+
+/* ==========================================
+   Validate Button Event
+========================================== */
+
+validateBtn.addEventListener("click", () => {
+
+    if (validateCube()) {
+
+        solveBtn.disabled = false;
+
+    }
+
+});
+
+/* ==========================================
+   Solve Button Event
+========================================== */
+
+solveBtn.addEventListener("click", () => {
+
+    if (!appState.cubeValidated) {
+        showToast("Validate cube first.");
+        return;
+    }
+
+    solveCube();
+
+});
+
+/* ==========================================
    Refresh UI
 ========================================== */
 
@@ -405,6 +495,54 @@ function refreshEditor() {
 }
 
 refreshEditor();
+
+solveBtn.disabled = true;
+
+/* ==========================================
+   Cube State Mapping
+========================================== */
+
+const COLOR_TO_FACE = {
+    white: "U",
+    red: "R",
+    green: "F",
+    yellow: "D",
+    orange: "L",
+    blue: "B"
+};
+
+function getStickerIndex(cubie, faceLetter) {
+
+    const x = cubie.userData.x;
+    const y = cubie.userData.y;
+    const z = cubie.userData.z;
+
+    switch (faceLetter) {
+
+        case "U":
+            return (1 - z) * 3 + (x + 1);
+
+        case "D":
+            return (z + 1) * 3 + (x + 1);
+
+        case "F":
+            return (1 - y) * 3 + (x + 1);
+
+        case "B":
+            return (1 - y) * 3 + (1 - x);
+
+        case "R":
+            return (1 - y) * 3 + (1 - z);
+
+        case "L":
+            return (1 - y) * 3 + (z + 1);
+
+        default:
+            return -1;
+
+    }
+
+}
 /* ==========================================
    Three.js Scene Setup
 ========================================== */
@@ -612,12 +750,22 @@ if (previousColor) {
 }
 
 cubie.userData.painted[faceIndex] = appState.selectedColor;
+
 colorUsage[appState.selectedColor]++;
 
 cubie.material[faceIndex].color.setHex(
     colorMap[appState.selectedColor]
 );
 
+const faceLetter = ["R","L","U","D","F","B"][faceIndex];
+
+const stickerIndex = getStickerIndex(cubie, faceLetter);
+
+cubeState[faceLetter][stickerIndex] =
+    COLOR_TO_FACE[appState.selectedColor];
+
+updateFilledCounter();
+updateValidateButton();
 updateColorCounters();
 
 showToast(appState.selectedColor + " Applied");
@@ -664,3 +812,4 @@ window.addEventListener(
 
     }
 );
+
