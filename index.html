@@ -35,7 +35,7 @@
     <!-- Main Production Application Area -->
     <div id="main-app" class="hidden">
         
-        <!-- Header -->
+        <!-- Modern System Header Navbar -->
         <header class="app-header">
             <div class="header-branding">
                 <div class="branding-icon">
@@ -57,47 +57,60 @@
             </div>
         </header>
 
-        <!-- Dynamic Mobile Workspace Layout -->
+        <!-- Dynamic Page/View State Architecture Layout -->
         <main class="workspace-container">
             
-            <!-- Metadata Counter Row -->
-            <div class="status-metrics-row">
-                <div class="metric-pill">
-                    <span class="metric-label">Cube Face :</span>
-                    <span id="face-counter" class="metric-value">1 / 6</span>
+            <!-- Top Section: Metric Display Row -->
+            <div class="metrics-summary-strip">
+                <div class="metric-pill-inline">
+                    <span class="lbl">Cube Face :</span>
+                    <span id="face-counter" class="val">1 / 6</span>
                 </div>
-                <div class="metric-pill">
-                    <span class="metric-label">Filled Stickers :</span>
-                    <span id="filled-count" class="metric-value">0 / 54</span>
+                <div class="metric-pill-inline">
+                    <span class="lbl">Filled Stickers :</span>
+                    <span id="filled-count" class="val">0 / 54</span>
                 </div>
             </div>
 
-            <!-- Hidden native elements preserved for script calculations -->
-            <progress id="face-progress" max="6" value="1" class="hidden-fallback"></progress>
-            <p class="wizard-instruction-text hidden-fallback">Rotate the physical cube matching layout orientation.</p>
-
-            <!-- Large 3D Cube Viewer Panel -->
+            <!-- Interactive 3D WebGL Viewport Container -->
             <section id="editor-page" class="viewport-panel">
-                <div id="viewer"></div>
+                <div class="card glass-card canvas-card">
+                    <div class="card-header-badge">
+                        <span class="pulse-indicator"></span> 3D Virtual Workspace
+                    </div>
+                    
+                    <!-- Primary Render Target for Three.js WebGL Core Engine -->
+                    <div id="viewer"></div>
+                </div>
             </section>
 
-            <!-- Core Operations Context Control Pane -->
+            <!-- Interactive Configuration Context Control Pane -->
             <section class="controls-sidebar-pane">
                 
-                <!-- Full-Width Validate Action Button -->
-                <button id="validate-btn" class="action-btn validate-full-width" disabled>
+                <!-- Wizard Navigation Block (Maintains progress tags internally for compatibility) -->
+                <div class="card glass-card state-wizard-card hidden-meta-structure">
+                    <div class="wizard-header">
+                        <h3>Guided Face Scan Sequence</h3>
+                    </div>
+                    <div class="progress-bar-wrapper">
+                        <progress id="face-progress" max="6" value="1"></progress>
+                    </div>
+                    <p class="wizard-instruction-text">Rotate the physical cube matching the exact face view layout orientation shown on the screen.</p>
+                </div>
+
+                <!-- Full-Width Dynamic Action Validation Trigger -->
+                <button id="validate-btn" class="action-btn validate-action-button-full" disabled>
                     Validate Face
                 </button>
 
-                <!-- Sticker Injection Palette Array (One Horizontal Row) -->
-                <div class="palette-card">
+                <!-- Professional Precision Color Picker Palette Array (One Horizontal Row) -->
+                <div class="card glass-card palette-card">
                     <div class="card-section-title">
                         <h4>Color Picker</h4>
                     </div>
                     
-                    <div class="color-picker-grid-horizontal">
-                        <!-- White -->
-                        <button class="color-btn" data-color="white">
+                    <div class="color-picker-grid">
+                        <button class="color-btn white" data-color="white">
                             <span class="swatch white-swatch"></span>
                             <span class="color-details">
                                 <span class="color-name">White</span>
@@ -105,8 +118,7 @@
                             </span>
                         </button>
                         
-                        <!-- Green -->
-                        <button class="color-btn" data-color="green">
+                        <button class="color-btn green" data-color="green">
                             <span class="swatch green-swatch"></span>
                             <span class="color-details">
                                 <span class="color-name">Green</span>
@@ -114,8 +126,7 @@
                             </span>
                         </button>
 
-                        <!-- Red -->
-                        <button class="color-btn" data-color="red">
+                        <button class="color-btn red" data-color="red">
                             <span class="swatch red-swatch"></span>
                             <span class="color-details">
                                 <span class="color-name">Red</span>
@@ -123,8 +134,7 @@
                             </span>
                         </button>
 
-                        <!-- Blue -->
-                        <button class="color-btn" data-color="blue">
+                        <button class="color-btn blue" data-color="blue">
                             <span class="swatch blue-swatch"></span>
                             <span class="color-details">
                                 <span class="color-name">Blue</span>
@@ -132,8 +142,7 @@
                             </span>
                         </button>
 
-                        <!-- Orange -->
-                        <button class="color-btn" data-color="orange">
+                        <button class="color-btn orange" data-color="orange">
                             <span class="swatch orange-swatch"></span>
                             <span class="color-details">
                                 <span class="color-name">Orange</span>
@@ -141,8 +150,7 @@
                             </span>
                         </button>
 
-                        <!-- Yellow -->
-                        <button class="color-btn" data-color="yellow">
+                        <button class="color-btn yellow" data-color="yellow">
                             <span class="swatch yellow-swatch"></span>
                             <span class="color-details">
                                 <span class="color-name">Yellow</span>
@@ -152,20 +160,35 @@
                     </div>
                 </div>
 
-                <!-- Solution Output Panel Element -->
-                <div id="solver-page" class="output-results-panel-hidden">
+                <!-- Solution & Statistics Display Output Panel Elements -->
+                <div id="solver-page" class="card glass-card output-results-panel">
                     <div id="loading-page" class="panel-sub-state hidden">
                         <div class="spinner-loader"></div>
                         <p>Processing state permutations...</p>
                     </div>
 
-                    <div id="finish-page" class="panel-sub-state hidden">
-                        <div class="metrics-dashboard-grid">
-                            <div class="stat-box"><span class="stat-value">2.44s</span></div>
-                            <div class="stat-box"><span class="stat-value">21</span></div>
-                            <div class="stat-box"><span class="stat-value">99.8%</span></div>
+                    <div id="finish-page" class="panel-sub-state">
+                        <div class="panel-section-header">
+                            <h4>Solution Execution Log</h4>
                         </div>
+                        
+                        <div class="metrics-dashboard-grid">
+                            <div class="stat-box">
+                                <span class="stat-value">2.44s</span>
+                                <span class="stat-label">Solve Time</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-value">21</span>
+                                <span class="stat-label">Total Moves</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-value">99.8%</span>
+                                <span class="stat-label">Efficiency</span>
+                            </div>
+                        </div>
+
                         <div class="algorithm-readout-container">
+                            <span class="readout-label">Computed Kociemba Sequence:</span>
                             <div class="algorithm-string">
                                 R U R' U' F' U2 F R U R' F' R U R' U' F'
                             </div>
@@ -173,29 +196,32 @@
                     </div>
                 </div>
 
+                <!-- Core Legacy Layout Wrappers (Kept for absolute structural compatibility) -->
+                <div class="actions-dock-wrapper container-hidden-legacy">
+                    <div class="dual-action-row"></div>
+                </div>
             </section>
         </main>
 
-        <!-- Bottom Navigation Bar Layout -->
-        <footer class="bottom-nav-dock">
-            <button id="btn-prev-face" class="nav-action-btn prev-step-btn">
+        <!-- System Sticky Bottom Navigation Dock -->
+        <footer class="app-bottom-navigation-bar">
+            <button id="btn-prev-face" class="nav-btn prev-step-btn">
                 Previous
             </button>
-            
-            <div class="nav-action-right-slot">
-                <button id="btn-next-face" class="nav-action-btn next-step-btn">
+            <div class="nav-right-slot-container">
+                <button id="btn-next-face" class="nav-btn next-step-btn">
                     Next
                 </button>
-                
-                <button id="solve-btn" class="nav-action-btn execute-solve-btn" disabled>
+                <button id="solve-btn" class="nav-btn execute-solve-btn" disabled>
                     Solve Cube
                 </button>
             </div>
         </footer>
     </div>
 
-    <!-- Toast Notification Engine -->
+    <!-- System Wide Real-time Toast Notification Display Engine -->
     <div id="toast" class="toast-notification-node">Initialization successful.</div>
 
 </body>
 </html>
+
