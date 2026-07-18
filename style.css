@@ -1,5 +1,5 @@
 /* =======================================================
-   Rubik Solver Pro - Redesigned UI Core Stylesheet
+   Rubik Solver Pro - Restructured Core Stylesheet
    ======================================================= */
 
 *,
@@ -12,61 +12,63 @@
 
 :root {
     --bg: #090d16;
-    --surface: #131a2a;
-    --surface-secondary: #1e293b;
+    --surface: #111827;
+    --surface-card: #1f2937;
+    --surface-active: #374151;
     --primary: #3b82f6;
-    --primary-hover: #2563eb;
     --success: #22c55e;
-    --border: #24324d;
-    --text: #f8fafc;
-    --text-muted: #64748b;
+    --border: #374151;
+    --text: #f9fafb;
+    --text-muted: #9ca3af;
     --radius-lg: 16px;
     --radius-md: 12px;
     --radius-sm: 8px;
-    --font-main: 'Plus Jakarta Sans', sans-serif;
-    --max-width: 480px;
-    --header-height: 60px;
-    --footer-height: 72px;
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --transition-fast: 0.2s ease;
+    --nav-height: 72px;
 }
 
+body.light,
 body[data-theme="light"] {
-    --bg: #f8fafc;
+    --bg: #f3f4f6;
     --surface: #ffffff;
-    --surface-secondary: #f1f5f9;
-    --border: #e2e8f0;
-    --text: #0f172a;
-    --text-muted: #64748b;
+    --surface-card: #f9fafb;
+    --surface-active: #e5e7eb;
+    --border: #e5e7eb;
+    --text: #111827;
+    --text-muted: #6b7280;
 }
 
 body {
-    font-family: var(--font-main);
+    font-family: "Plus Jakarta Sans", sans-serif;
     background-color: var(--bg);
     color: var(--text);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     overflow-x: hidden;
-    transition: background-color 0.3s, color 0.3s;
 }
 
 .hidden {
     display: none !important;
 }
 
+.hidden-fallback {
+    display: none !important;
+}
+
 /* =======================================================
-   Splash Screen Loading Components
+   Splash Screen Components
    ======================================================= */
-#splash-screen, #loading-page {
+#splash-screen {
     position: fixed;
     inset: 0;
-    background: #090d16;
-    z-index: 9999;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 24px;
-    color: #ffffff;
+    background: #030712;
+    z-index: 9999;
 }
 
 .cube-logo-animation {
@@ -74,128 +76,129 @@ body {
     height: 60px;
     position: relative;
     transform-style: preserve-3d;
-    animation: spinCube 4s infinite linear;
-    margin-bottom: 32px;
+    animation: rotateCube 4s infinite linear;
+    margin-bottom: 20px;
 }
 
 .cube-logo-animation .face {
     position: absolute;
     width: 60px;
     height: 60px;
-    border: 3px solid #090d16;
-    background: var(--primary);
-    opacity: 0.9;
+    border: 2px solid #030712;
 }
 
-.cube-logo-animation .front  { transform: rotateY(  0deg) translateZ(30px); background: #ef4444; }
-.cube-logo-animation .back   { transform: rotateY(180deg) translateZ(30px); background: #ff7300; }
-.cube-logo-animation .left   { transform: rotateY(-90deg) translateZ(30px); background: #2563eb; }
-.cube-logo-animation .right  { transform: rotateY( 90deg) translateZ(30px); background: #22c55e; }
-.cube-logo-animation .top    { transform: rotateX( 90deg) translateZ(30px); background: #ffffff; }
-.cube-logo-animation .bottom { transform: rotateX(-90deg) translateZ(30px); background: #ffd200; }
+.cube-logo-animation .front  { transform: rotateY(0deg) translateZ(30px); background: #ef4444; }
+.cube-logo-animation .back   { transform: rotateY(180deg) translateZ(30px); background: #f97316; }
+.cube-logo-animation .left   { transform: rotateY(-90deg) translateZ(30px); background: #3b82f6; }
+.cube-logo-animation .right  { transform: rotateY(90deg) translateZ(30px); background: #22c55e; }
+.cube-logo-animation .top    { transform: rotateX(90deg) translateZ(30px); background: #ffffff; }
+.cube-logo-animation .bottom { transform: rotateX(-90deg) translateZ(30px); background: #eab308; }
 
-@keyframes spinCube {
+@keyframes rotateCube {
     0% { transform: rotateX(0deg) rotateY(0deg); }
     100% { transform: rotateX(360deg) rotateY(360deg); }
 }
 
 .splash-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 800;
     letter-spacing: 1px;
-    margin-bottom: 8px;
 }
 .splash-title span { color: var(--primary); }
-.splash-subtitle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px; }
+.splash-subtitle { color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; }
 
 .progress-track {
     width: 200px;
-    height: 6px;
-    background: #1e293b;
-    border-radius: 3px;
+    height: 4px;
+    background: #374151;
+    border-radius: 2px;
+    margin-top: 24px;
     overflow: hidden;
 }
 #loading-progress {
     width: 0%;
     height: 100%;
     background: var(--primary);
-    transition: width 0.2s ease;
+    transition: width 0.3s ease;
 }
 
 /* =======================================================
-   Application Architecture Layout
+   Production Main Application Container Layout
    ======================================================= */
 #main-app {
     width: 100%;
-    max-width: var(--max-width);
+    max-width: 480px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     background-color: var(--surface);
     position: relative;
-    padding-bottom: var(--footer-height);
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
+    padding-bottom: var(--nav-height);
 }
 
 .app-header {
-    height: var(--header-height);
+    height: 60px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
+    align-items: center;
+    padding: 0 16px;
     border-bottom: 1px solid var(--border);
 }
 
 .app-header h2 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: 700;
 }
 
 .header-actions {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
 .icon-btn {
     background: transparent;
     border: none;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     padding: 6px;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: background 0.2s;
-}
-.icon-btn:hover {
-    background: var(--surface-secondary);
 }
 
-/* Workspace Panels */
 .workspace-container {
-    padding: 16px 20px;
+    padding: 12px 16px;
     display: flex;
     flex-direction: column;
+    gap: 12px;
     flex-grow: 1;
-    gap: 16px;
 }
 
-/* Top Indicator Metadata Row */
-.meta-indicator-bar {
+/* =======================================================
+   Metadata Counter Row
+   ======================================================= */
+.status-metrics-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.95rem;
-    font-weight: 600;
     padding: 4px 2px;
 }
-.meta-label {
-    color: var(--text-muted);
-    margin-right: 4px;
-}
-.meta-value {
-    color: var(--text);
+
+.metric-pill {
+    font-size: 0.95rem;
+    font-weight: 600;
 }
 
-/* 3D WebGL Canvas Workspace Container */
+.metric-label {
+    color: var(--text-muted);
+}
+
+.metric-value {
+    color: var(--text);
+    margin-left: 4px;
+}
+
+/* =======================================================
+   3D WebGL Cube Viewer Panel
+   ======================================================= */
 .viewport-panel {
     width: 100%;
 }
@@ -203,242 +206,234 @@ body {
 #viewer {
     width: 100%;
     aspect-ratio: 1 / 1;
-    background: #050811;
+    background: #030712;
     border-radius: var(--radius-lg);
     border: 1px solid var(--border);
     overflow: hidden;
+    box-shadow: var(--shadow-soft);
 }
 
-/* Precision Controls Stack */
-.controls-panel {
+/* =======================================================
+   Core Operations Controls Pane
+   ======================================================= */
+.controls-sidebar-pane {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
 }
 
-.action-btn {
+/* Full Width Action Validation Button */
+.validate-full-width {
     width: 100%;
     padding: 14px;
-    font-family: var(--font-main);
+    font-family: inherit;
     font-size: 1rem;
     font-weight: 700;
     border-radius: var(--radius-md);
-    border: none;
+    border: 1px solid var(--border);
+    background-color: var(--surface-card);
+    color: var(--text);
     cursor: pointer;
-    transition: all 0.2s ease;
+    box-shadow: var(--shadow-soft);
+    transition: background-color var(--transition-fast);
 }
 
-.validate-action-btn {
-    background-color: var(--surface-secondary);
-    color: var(--text);
-    border: 1px solid var(--border);
+.validate-full-width:not(:disabled):hover {
+    background-color: var(--surface-active);
 }
-.validate-action-btn:not(:disabled):hover {
-    background-color: var(--border);
-}
-.validate-action-btn:disabled {
+
+.validate-full-width:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-/* Sticker Configuration Palette Matrix */
-.palette-container {
+/* =======================================================
+   Sticker Color Picker Horizontal Row Palette
+   ======================================================= */
+.palette-card {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
+    padding: 4px 0;
 }
 
-.section-title {
-    font-size: 0.95rem;
+.card-section-title h4 {
+    font-size: 0.85rem;
     font-weight: 700;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.color-picker-horizontal-row {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 8px;
+.color-picker-grid-horizontal {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
+    padding: 4px 0;
 }
 
-.color-btn {
+.color-picker-grid-horizontal .color-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
     background: transparent;
     border: none;
     cursor: pointer;
-    gap: 8px;
-    padding: 4px 0;
+    padding: 0;
+    margin: 0;
     outline: none;
+    gap: 6px;
+    flex: 1;
 }
 
-.color-circle {
-    width: 36px;
-    height: 36px;
+/* Render circular color dots directly */
+.color-picker-grid-horizontal .swatch {
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
     border: 2px solid transparent;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    transition: transform 0.2s, border-color 0.2s;
-    position: relative;
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
 }
 
-.color-btn:hover .color-circle {
+.color-picker-grid-horizontal .color-btn.active .swatch {
+    border-color: var(--primary);
     transform: scale(1.1);
 }
 
-.color-btn.active .color-circle {
-    border-color: var(--primary);
-    transform: scale(1.15);
+/* Native class map background overrides */
+.white-swatch  { background-color: #ffffff; border: 1px solid #d1d5db !important; }
+.green-swatch  { background-color: #22c55e; }
+.red-swatch    { background-color: #ef4444; }
+.blue-swatch   { background-color: #3b82f6; }
+.orange-swatch { background-color: #f97316; }
+.yellow-swatch { background-color: #eab308; }
+
+/* Keep metadata hidden except the target numerical tags underneath */
+.color-picker-grid-horizontal .color-name {
+    display: none !important;
 }
 
-/* Palette Color Mapping definitions */
-.white .color-circle   { background-color: #ffffff; border: 1px solid #cbd5e1; }
-.green .color-circle   { background-color: #22c55e; }
-.red .color-circle     { background-color: #ef4444; }
-.blue .color-circle    { background-color: #2563eb; }
-.orange .color-circle  { background-color: #ff7300; }
-.yellow .color-circle  { background-color: #ffd200; }
-
-.count-tag {
+.color-picker-grid-horizontal .count-tag {
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-muted);
 }
-.color-btn.active .count-tag {
+
+.color-picker-grid-horizontal .color-btn.active .count-tag {
     color: var(--primary);
     font-weight: 700;
 }
 
 /* =======================================================
-   Dynamic Bottom Navigation Architecture
+   Hidden Legacy Metric Placeholders
    ======================================================= */
-.bottom-nav-bar {
+.output-results-panel-hidden {
+    display: none !important;
+}
+
+/* =======================================================
+   Bottom Navigation Architecture Dock
+   ======================================================= */
+.bottom-nav-dock {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: var(--footer-height);
+    height: var(--nav-height);
     background-color: var(--surface);
     border-top: 1px solid var(--border);
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
-    z-index: 90;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 100;
 }
 
-.nav-btn {
-    padding: 12px 24px;
-    font-family: var(--font-main);
+.nav-action-btn {
+    padding: 10px 20px;
+    font-family: inherit;
     font-size: 0.95rem;
     font-weight: 600;
     border-radius: var(--radius-md);
     border: none;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
-.prev-btn {
-    background: transparent;
+.prev-step-btn {
+    background-color: transparent;
     color: var(--text-muted);
 }
-.prev-btn:hover {
+
+.prev-step-btn:hover {
     color: var(--text);
-    background-color: var(--surface-secondary);
+    background-color: var(--surface-card);
 }
 
-.nav-right-actions {
+.nav-action-right-slot {
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    width: 140px;
+    height: 100%;
 }
 
-.next-btn {
+/* Stack Next and Solve exactly on top of each other */
+.next-step-btn,
+.execute-solve-btn {
+    position: absolute;
+    right: 0;
+    white-space: nowrap;
+}
+
+.next-step-btn {
     background-color: var(--primary);
     color: #ffffff;
-}
-.next-btn:hover {
-    background-color: var(--primary-hover);
+    z-index: 2;
 }
 
-.solve-btn {
+.next-step-btn[style*="display: none"] {
+    display: none !important;
+}
+
+.execute-solve-btn {
     background-color: var(--success);
     color: #ffffff;
+    z-index: 1;
 }
-.solve-btn:disabled {
-    display: none; /* Auto hidden/shown seamlessly depending on implementation states */
+
+/* Alternate display behavior handled naturally via script rules injection templates */
+.execute-solve-btn:disabled {
+    opacity: 0.6;
 }
 
 /* =======================================================
-   Solution View Permutations Log Panel
-   ======================================================= */
-.output-results-panel {
-    background: var(--surface-secondary);
-    border-radius: var(--radius-md);
-    padding: 16px;
-    border: 1px solid var(--border);
-    margin-top: 8px;
-}
-.algorithm-readout-container {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-.readout-label {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-}
-.algorithm-string {
-    font-family: monospace;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
-    color: var(--primary);
-    background: rgba(59, 130, 246, 0.1);
-    padding: 12px;
-    border-radius: var(--radius-sm);
-    text-align: center;
-}
-
-/* Spinner element configuration */
-.spinner-loader {
-    width: 32px;
-    height: 32px;
-    border: 3px solid var(--border);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-bottom: 12px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* =======================================================
-   Global Native System Toast Node
+   Toast Messages System Elements
    ======================================================= */
 .toast-notification-node {
     position: fixed;
-    bottom: calc(var(--footer-height) + 16px);
+    bottom: calc(var(--nav-height) + 16px);
     left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: #0f172a;
+    transform: translateX(-50%);
+    background: #111827;
     color: #ffffff;
     padding: 10px 20px;
-    border-radius: 999px;
+    border-radius: 9999px;
     font-size: 0.85rem;
     font-weight: 500;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
     pointer-events: none;
     opacity: 0;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
-    z-index: 1000;
-    border: 1px solid #1e293b;
-    white-space: nowrap;
+    transition: opacity 0.25s ease;
+    z-index: 999;
+    border: 1px solid #374151;
 }
+
 .toast-notification-node.show {
-    transform: translateX(-50%) translateY(0);
     opacity: 1;
 }
+
