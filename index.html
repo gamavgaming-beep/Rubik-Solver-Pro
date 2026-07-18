@@ -14,13 +14,15 @@
     <!-- Premium Animated Splash Screen -->
     <div id="splash-screen">
         <div class="splash-content">
-            <div class="cube-logo-animation">
-                <div class="face front"></div>
-                <div class="face back"></div>
-                <div class="face left"></div>
-                <div class="face right"></div>
-                <div class="face top"></div>
-                <div class="face bottom"></div>
+            <div class="splash-logo-container">
+                <div class="cube-logo-animation">
+                    <div class="face front"></div>
+                    <div class="face back"></div>
+                    <div class="face left"></div>
+                    <div class="face right"></div>
+                    <div class="face top"></div>
+                    <div class="face bottom"></div>
+                </div>
             </div>
             <h1 class="splash-title">RUBIK SOLVER<span>PRO</span></h1>
             <p class="splash-subtitle">Analyzing structural matrix elements...</p>
@@ -35,93 +37,138 @@
         
         <!-- Header -->
         <header class="app-header">
-            <h2>3D Cube Editor</h2>
+            <div class="header-branding">
+                <div class="branding-icon">
+                    <span></span><span></span><span></span><span></span>
+                </div>
+                <h2>3D Cube Editor</h2>
+            </div>
+            
             <div class="header-actions">
-                <button id="install-btn" class="icon-btn" aria-label="Install App" style="display: none;">📥</button>
-                <button id="settings-btn" class="icon-btn" aria-label="Settings">⚙️</button>
-                <button id="theme-btn" class="icon-btn theme-toggle-btn" aria-label="Toggle Theme">🌙</button>
+                <button id="install-btn" class="icon-btn tooltip" aria-label="Install App" style="display: none;">
+                    📥
+                </button>
+                <button id="settings-btn" class="icon-btn tooltip" aria-label="Application Settings">
+                    ⚙️
+                </button>
+                <button id="theme-btn" class="icon-btn theme-toggle-btn" aria-label="Toggle Theme Mode">
+                    🌙
+                </button>
             </div>
         </header>
 
-        <!-- Main Workspace Container -->
+        <!-- Dynamic Mobile Workspace Layout -->
         <main class="workspace-container">
             
-            <!-- Metadata Progress Indicator Box -->
-            <div class="meta-indicator-bar">
-                <div class="meta-item-left">
-                    <span class="meta-label">Cube Face:</span>
-                    <span id="face-counter" class="meta-value">1 / 6</span>
+            <!-- Metadata Counter Row -->
+            <div class="status-metrics-row">
+                <div class="metric-pill">
+                    <span class="metric-label">Cube Face :</span>
+                    <span id="face-counter" class="metric-value">1 / 6</span>
                 </div>
-                <div class="meta-item-right">
-                    <span class="meta-label">Stickers Colored:</span>
-                    <span id="filled-count" class="meta-value">0 / 54</span>
+                <div class="metric-pill">
+                    <span class="metric-label">Filled Stickers :</span>
+                    <span id="filled-count" class="metric-value">0 / 54</span>
                 </div>
             </div>
-            
-            <!-- Hidden native progress bar to maintain JS calculations safely -->
-            <progress id="face-progress" max="6" value="1" style="display: none;"></progress>
 
-            <!-- 3D WebGL Viewport Component -->
-            <section class="viewport-panel">
+            <!-- Hidden native elements preserved for script calculations -->
+            <progress id="face-progress" max="6" value="1" class="hidden-fallback"></progress>
+            <p class="wizard-instruction-text hidden-fallback">Rotate the physical cube matching layout orientation.</p>
+
+            <!-- Large 3D Cube Viewer Panel -->
+            <section id="editor-page" class="viewport-panel">
                 <div id="viewer"></div>
             </section>
 
-            <!-- Action Controls Pane -->
-            <section class="controls-panel">
+            <!-- Core Operations Context Control Pane -->
+            <section class="controls-sidebar-pane">
                 
-                <!-- Full Width Validation trigger -->
-                <button id="validate-btn" class="action-btn validate-action-btn" disabled>
+                <!-- Full-Width Validate Action Button -->
+                <button id="validate-btn" class="action-btn validate-full-width" disabled>
                     Validate Face
                 </button>
 
-                <!-- Sticker Configuration Palette Row -->
-                <div class="palette-container">
-                    <h4 class="section-title">Color Picker</h4>
+                <!-- Sticker Injection Palette Array (One Horizontal Row) -->
+                <div class="palette-card">
+                    <div class="card-section-title">
+                        <h4>Color Picker</h4>
+                    </div>
                     
-                    <div class="color-picker-horizontal-row">
-                        <button class="color-btn white" data-color="white">
-                            <span class="color-circle"></span>
-                            <span id="count-white" class="count-tag">0/9</span>
+                    <div class="color-picker-grid-horizontal">
+                        <!-- White -->
+                        <button class="color-btn" data-color="white">
+                            <span class="swatch white-swatch"></span>
+                            <span class="color-details">
+                                <span class="color-name">White</span>
+                                <span id="count-white" class="count-tag">0/9</span>
+                            </span>
                         </button>
                         
-                        <button class="color-btn green" data-color="green">
-                            <span class="color-circle"></span>
-                            <span id="count-green" class="count-tag">0/9</span>
+                        <!-- Green -->
+                        <button class="color-btn" data-color="green">
+                            <span class="swatch green-swatch"></span>
+                            <span class="color-details">
+                                <span class="color-name">Green</span>
+                                <span id="count-green" class="count-tag">0/9</span>
+                            </span>
                         </button>
 
-                        <button class="color-btn red" data-color="red">
-                            <span class="color-circle"></span>
-                            <span id="count-red" class="count-tag">0/9</span>
+                        <!-- Red -->
+                        <button class="color-btn" data-color="red">
+                            <span class="swatch red-swatch"></span>
+                            <span class="color-details">
+                                <span class="color-name">Red</span>
+                                <span id="count-red" class="count-tag">0/9</span>
+                            </span>
                         </button>
 
-                        <button class="color-btn blue" data-color="blue">
-                            <span class="color-circle"></span>
-                            <span id="count-blue" class="count-tag">0/9</span>
+                        <!-- Blue -->
+                        <button class="color-btn" data-color="blue">
+                            <span class="swatch blue-swatch"></span>
+                            <span class="color-details">
+                                <span class="color-name">Blue</span>
+                                <span id="count-blue" class="count-tag">0/9</span>
+                            </span>
                         </button>
 
-                        <button class="color-btn orange" data-color="orange">
-                            <span class="color-circle"></span>
-                            <span id="count-orange" class="count-tag">0/9</span>
+                        <!-- Orange -->
+                        <button class="color-btn" data-color="orange">
+                            <span class="swatch orange-swatch"></span>
+                            <span class="color-details">
+                                <span class="color-name">Orange</span>
+                                <span id="count-orange" class="count-tag">0/9</span>
+                            </span>
                         </button>
 
-                        <button class="color-btn yellow" data-color="yellow">
-                            <span class="color-circle"></span>
-                            <span id="count-yellow" class="count-tag">0/9</span>
+                        <!-- Yellow -->
+                        <button class="color-btn" data-color="yellow">
+                            <span class="swatch yellow-swatch"></span>
+                            <span class="color-details">
+                                <span class="color-name">Yellow</span>
+                                <span id="count-yellow" class="count-tag">0/9</span>
+                            </span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Solution & Permutations Results Output Viewport Overlay -->
-                <div id="solver-page" class="output-results-panel hidden">
+                <!-- Solution Output Panel Element -->
+                <div id="solver-page" class="output-results-panel-hidden">
                     <div id="loading-page" class="panel-sub-state hidden">
                         <div class="spinner-loader"></div>
                         <p>Processing state permutations...</p>
                     </div>
 
-                    <div id="finish-page" class="panel-sub-state">
+                    <div id="finish-page" class="panel-sub-state hidden">
+                        <div class="metrics-dashboard-grid">
+                            <div class="stat-box"><span class="stat-value">2.44s</span></div>
+                            <div class="stat-box"><span class="stat-value">21</span></div>
+                            <div class="stat-box"><span class="stat-value">99.8%</span></div>
+                        </div>
                         <div class="algorithm-readout-container">
-                            <span class="readout-label">Computed Kociemba Sequence:</span>
-                            <div class="algorithm-string">R U R' U' F' U2 F R U R' F' R U R' U' F'</div>
+                            <div class="algorithm-string">
+                                R U R' U' F' U2 F R U R' F' R U R' U' F'
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -129,17 +176,25 @@
             </section>
         </main>
 
-        <!-- Fixed Interactive Bottom Navigation Bar -->
-        <footer class="bottom-nav-bar">
-            <button id="btn-prev-face" class="nav-btn prev-btn">Previous</button>
-            <div class="nav-right-actions">
-                <button id="btn-next-face" class="nav-btn next-btn">Next</button>
-                <button id="solve-btn" class="nav-btn solve-btn" disabled>Solve Cube</button>
+        <!-- Bottom Navigation Bar Layout -->
+        <footer class="bottom-nav-dock">
+            <button id="btn-prev-face" class="nav-action-btn prev-step-btn">
+                Previous
+            </button>
+            
+            <div class="nav-action-right-slot">
+                <button id="btn-next-face" class="nav-action-btn next-step-btn">
+                    Next
+                </button>
+                
+                <button id="solve-btn" class="nav-action-btn execute-solve-btn" disabled>
+                    Solve Cube
+                </button>
             </div>
         </footer>
     </div>
 
-    <!-- System Toast Component -->
+    <!-- Toast Notification Engine -->
     <div id="toast" class="toast-notification-node">Initialization successful.</div>
 
 </body>
