@@ -1,554 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
-    <title>Rubik Solver Pro</title>
-
-    <meta
-        name="description"
-        content="Professional 3D Rubik Cube Solver using Three.js">
-
-    <meta
-        name="theme-color"
-        content="#0f172a">
-
-    <meta
-        name="apple-mobile-web-app-capable"
-        content="yes">
-
-    <meta
-        name="apple-mobile-web-app-status-bar-style"
-        content="black">
-
-    <meta
-        name="apple-mobile-web-app-title"
-        content="Rubik Solver Pro">
-
-    <link
-        rel="manifest"
-        href="manifest.json">
-
-    <link
-        rel="icon"
-        href="assets/icons/icon-192.png">
-
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com">
-
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
-    <link
-        rel="stylesheet"
-        href="style.css">
-
-    <link
-        rel="stylesheet"
-        href="css/mobile.css">
-
-    <link
-        rel="stylesheet"
-        href="css/desktop.css">
-        
-    <script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.179.1/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.179.1/examples/jsm/"
-  }
-}
-    </script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>3D Cube Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-
-<body>
-
-<div id="app">
-
-<!-- ===================================================== -->
-<!-- Splash Screen -->
-<!-- ===================================================== -->
-
-<section id="splash-screen">
-
-    <div class="logo-area">
-
-        <img
-            src="assets/images/logo.png"
-            alt="Rubik Solver">
-
-        <h1>Rubik Solver Pro</h1>
-
-        <p>
-            Professional 3D Cube Solver
-        </p>
-
-    </div>
-
-    <div class="loading-bar">
-
-        <div id="loading-progress"></div>
-
-    </div>
-
-</section>
-
-<!-- ===================================================== -->
-<!-- Main Application -->
-<!-- ===================================================== -->
-
-<main id="main-app" class="hidden">
-
-<!-- ===================================================== -->
-<!-- Header -->
-<!-- ===================================================== -->
-
-<header>
-
-<div class="left">
-
-<h2>Rubik Solver Pro</h2>
-
-</div>
-
-<div class="right">
-
-<button id="theme-btn">
-
-🌙
-
-</button>
-
-<button id="settings-btn">
-
-⚙️
-
-</button>
-
-<button id="install-btn">
-
-Install
-
-</button>
-
-</div>
-
-</header>
-
-<!-- ===================================================== -->
-<!-- PAGE 1 -->
-<!-- Cube Editor -->
-<!-- ===================================================== -->
-
-<section id="editor-page">
-
-<div class="editor-layout">
-
-<!-- LEFT PANEL -->
-
-<div class="left-panel">
-
-<h3>
-
-3D Cube
-
-</h3>
-
-<div id="viewer">
-
-<!-- Three.js Canvas -->
-
-</div>
-
-<div class="progress-box">
-
-<span>
-
-Face
-
-</span>
-
-<span id="face-counter">
-
-1 / 6
-
-</span>
-
-</div>
-
-<progress
-value="1"
-max="6"
-id="face-progress">
-
-</progress>
-
-</div>
-
-<!-- RIGHT PANEL -->
-
-<div class="right-panel">
-
-<h3>
-
-Color Picker
-
-</h3>
-
-<div id="color-picker">
-     <!-- ===================================================== -->
-<!-- Color Picker -->
-<!-- ===================================================== -->
-
-<div class="color-grid compact-grid">
-
-    <button class="color-btn white active" data-color="white">
-        <span class="color-circle"></span>
-        <span class="color-count" id="count-white">0/9</span>
-    </button>
-
-    <button class="color-btn green" data-color="green">
-        <span class="color-circle"></span>
-        <span class="color-count" id="count-green">0/9</span>
-    </button>
-
-    <button class="color-btn red" data-color="red">
-        <span class="color-circle"></span>
-        <span class="color-count" id="count-red">0/9</span>
-    </button>
-
-    <button class="color-btn blue" data-color="blue">
-        <span class="color-circle"></span>
-        <span class="color-count" id="count-blue">0/9</span>
-    </button>
-
-    <button class="color-btn orange" data-color="orange">
-        <span class="color-circle"></span>
-        <span class="color-count" id="count-orange">0/9</span>
-    </button>
-
-    <button class="color-btn yellow" data-color="yellow">
-        <span class="color-circle"></span>
-        <span class="color-count" id="count-yellow">0/9</span>
-    </button>
-
-</div>
-
-</div>
-
-<!-- ===================================================== -->
-<!-- Face Navigation -->
-<!-- ===================================================== -->
-
-<div class="editor-controls">
-
-<button id="previous-face">
-
-⏮ Previous
-
-</button>
-
-<button id="next-face">
-
-Next ⏭
-
-</button>
-
-</div>
-
-<!-- ===================================================== -->
-<!-- Cube Status -->
-<!-- ===================================================== -->
-
-<div class="cube-status">
-
-<p>
-
-Filled Stickers
-
-</p>
-
-<h2 id="filled-count">
-
-0 / 54
-
-</h2>
-
-</div>
-
-<!-- ===================================================== -->
-<!-- Validate + Solve -->
-<!-- ===================================================== -->
-
-<div class="action-buttons">
-
-<button id="validate-btn">
-
-✅ Validate Cube
-
-</button>
-
-<button
-id="solve-btn"
-disabled>
-
-🚀 Solve Cube
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ===================================================== -->
-<!-- Loading Screen -->
-<!-- ===================================================== -->
-
-<section
-id="loading-page"
-class="hidden">
-
-<div class="loading-container">
-
-<h2>
-
-Checking Cube...
-
-</h2>
-
-<div class="loading-spinner"></div>
-
-<p id="loading-status">
-
-Validating colors...
-
-</p>
-
-<div class="loading-progress">
-
-<div id="loading-fill"></div>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ===================================================== -->
-<!-- PAGE 2 -->
-<!-- Solver Player -->
-<!-- ===================================================== -->
-
-<section
-id="solver-page"
-class="hidden">
-
-<div class="solver-layout">
-
-<div class="solver-left">
-
-<h2>
-
-3D Cube
-
-</h2>
-
-<div id="solver-viewer">
-
-<!-- Three.js -->
-
-</div>
-
-</div>
-
-<div class="solver-right">
-
-<h2>
-
-Current Move
-
-</h2>
-
-<h1 id="current-move">
-
-R
-
-</h1>
-
-<p id="move-counter">
-
-Move 1 / 21
-
-</p>
-
-     <!-- ===================================================== -->
-<!-- Player Controls -->
-<!-- ===================================================== -->
-
-<div class="player-controls">
-
-    <button id="player-previous">
-        ⏮ Previous
-    </button>
-
-    <button id="player-play">
-        ▶ Play
-    </button>
-
-    <button id="player-pause">
-        ⏸ Pause
-    </button>
-
-    <button id="player-next">
-        Next ⏭
-    </button>
-
-</div>
-
-<!-- ===================================================== -->
-<!-- Animation Speed -->
-<!-- ===================================================== -->
-
-<div class="speed-box">
-
-    <h3>Animation Speed</h3>
-
-    <select id="speed-select">
-
-        <option value="slow">
-            Slow
-        </option>
-
-        <option value="normal" selected>
-            Normal
-        </option>
-
-        <option value="fast">
-            Fast
-        </option>
-
-    </select>
-
-</div>
-
-<!-- ===================================================== -->
-<!-- Statistics -->
-<!-- ===================================================== -->
-
-<div class="statistics-box">
-
-    <h3>Statistics</h3>
-
-    <div class="stat-item">
-        <span>Total Moves</span>
-        <strong id="stats-moves">0</strong>
-    </div>
-
-    <div class="stat-item">
-        <span>Elapsed Time</span>
-        <strong id="stats-time">0.0 s</strong>
-    </div>
-
-</div>
-
-<!-- ===================================================== -->
-<!-- Algorithm List -->
-<!-- ===================================================== -->
-
-<div class="algorithm-box">
-
-    <h3>Algorithm</h3>
-
-    <div id="algorithm-list">
-
-        Waiting for solution...
-
-    </div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ===================================================== -->
-<!-- Finish Screen -->
-<!-- ===================================================== -->
-
-<section id="finish-page" class="hidden">
-
-    <div class="finish-container">
-
-        <h1>
-            🎉 Cube Solved
-        </h1>
-
-        <p>
-            Congratulations!
-        </p>
-
-        <div class="finish-stats">
-
-            <p>
-                Time :
-                <span id="finish-time">
-                    0.0 s
-                </span>
-            </p>
-
-            <p>
-                Moves :
-                <span id="finish-moves">
-                    0
-                </span>
-            </p>
-
+<body data-theme="dark">
+
+    <!-- Premium Animated Splash Screen -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <div class="cube-logo-animation">
+                <div class="face front"></div>
+                <div class="face back"></div>
+                <div class="face left"></div>
+                <div class="face right"></div>
+                <div class="face top"></div>
+                <div class="face bottom"></div>
+            </div>
+            <h1 class="splash-title">RUBIK SOLVER<span>PRO</span></h1>
+            <p class="splash-subtitle">Analyzing structural matrix elements...</p>
+            <div class="progress-track">
+                <div id="loading-progress"></div>
+            </div>
         </div>
-
-        <button id="solve-again">
-
-            Solve Another Cube
-
-        </button>
-
     </div>
 
-</section>
+    <!-- Main Production Application Area -->
+    <div id="main-app" class="hidden">
+        
+        <!-- Header -->
+        <header class="app-header">
+            <h2>3D Cube Editor</h2>
+            <div class="header-actions">
+                <button id="install-btn" class="icon-btn" aria-label="Install App" style="display: none;">📥</button>
+                <button id="settings-btn" class="icon-btn" aria-label="Settings">⚙️</button>
+                <button id="theme-btn" class="icon-btn theme-toggle-btn" aria-label="Toggle Theme">🌙</button>
+            </div>
+        </header>
 
-<!-- ===================================================== -->
-<!-- Toast Notification -->
-<!-- ===================================================== -->
+        <!-- Main Workspace Container -->
+        <main class="workspace-container">
+            
+            <!-- Metadata Progress Indicator Box -->
+            <div class="meta-indicator-bar">
+                <div class="meta-item-left">
+                    <span class="meta-label">Cube Face:</span>
+                    <span id="face-counter" class="meta-value">1 / 6</span>
+                </div>
+                <div class="meta-item-right">
+                    <span class="meta-label">Stickers Colored:</span>
+                    <span id="filled-count" class="meta-value">0 / 54</span>
+                </div>
+            </div>
+            
+            <!-- Hidden native progress bar to maintain JS calculations safely -->
+            <progress id="face-progress" max="6" value="1" style="display: none;"></progress>
 
-<div id="toast"></div>
+            <!-- 3D WebGL Viewport Component -->
+            <section class="viewport-panel">
+                <div id="viewer"></div>
+            </section>
 
-<!-- ===================================================== -->
-<!-- JavaScript -->
-<!-- ===================================================== -->
+            <!-- Action Controls Pane -->
+            <section class="controls-panel">
+                
+                <!-- Full Width Validation trigger -->
+                <button id="validate-btn" class="action-btn validate-action-btn" disabled>
+                    Validate Face
+                </button>
 
-<script type="module" src="app.js"></script>
+                <!-- Sticker Configuration Palette Row -->
+                <div class="palette-container">
+                    <h4 class="section-title">Color Picker</h4>
+                    
+                    <div class="color-picker-horizontal-row">
+                        <button class="color-btn white" data-color="white">
+                            <span class="color-circle"></span>
+                            <span id="count-white" class="count-tag">0/9</span>
+                        </button>
+                        
+                        <button class="color-btn green" data-color="green">
+                            <span class="color-circle"></span>
+                            <span id="count-green" class="count-tag">0/9</span>
+                        </button>
 
-</main>
+                        <button class="color-btn red" data-color="red">
+                            <span class="color-circle"></span>
+                            <span id="count-red" class="count-tag">0/9</span>
+                        </button>
 
-</div>
+                        <button class="color-btn blue" data-color="blue">
+                            <span class="color-circle"></span>
+                            <span id="count-blue" class="count-tag">0/9</span>
+                        </button>
+
+                        <button class="color-btn orange" data-color="orange">
+                            <span class="color-circle"></span>
+                            <span id="count-orange" class="count-tag">0/9</span>
+                        </button>
+
+                        <button class="color-btn yellow" data-color="yellow">
+                            <span class="color-circle"></span>
+                            <span id="count-yellow" class="count-tag">0/9</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Solution & Permutations Results Output Viewport Overlay -->
+                <div id="solver-page" class="output-results-panel hidden">
+                    <div id="loading-page" class="panel-sub-state hidden">
+                        <div class="spinner-loader"></div>
+                        <p>Processing state permutations...</p>
+                    </div>
+
+                    <div id="finish-page" class="panel-sub-state">
+                        <div class="algorithm-readout-container">
+                            <span class="readout-label">Computed Kociemba Sequence:</span>
+                            <div class="algorithm-string">R U R' U' F' U2 F R U R' F' R U R' U' F'</div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+
+        <!-- Fixed Interactive Bottom Navigation Bar -->
+        <footer class="bottom-nav-bar">
+            <button id="btn-prev-face" class="nav-btn prev-btn">Previous</button>
+            <div class="nav-right-actions">
+                <button id="btn-next-face" class="nav-btn next-btn">Next</button>
+                <button id="solve-btn" class="nav-btn solve-btn" disabled>Solve Cube</button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- System Toast Component -->
+    <div id="toast" class="toast-notification-node">Initialization successful.</div>
 
 </body>
-
 </html>
