@@ -1,5 +1,5 @@
 /* =======================================================
-   Rubik Solver Pro - Restructured Core Stylesheet
+   Rubik Solver Pro - Premium Mobile Layout Core Stylesheet
    ======================================================= */
 
 *,
@@ -13,28 +13,31 @@
 :root {
     --bg: #090d16;
     --surface: #111827;
-    --surface-card: #1f2937;
+    --surface-card: rgba(31, 41, 55, 0.65);
     --surface-active: #374151;
     --primary: #3b82f6;
+    --primary-hover: #2563eb;
     --success: #22c55e;
-    --border: #374151;
+    --success-hover: #16a34a;
+    --border: rgba(255, 255, 255, 0.08);
     --text: #f9fafb;
     --text-muted: #9ca3af;
-    --radius-lg: 16px;
-    --radius-md: 12px;
-    --radius-sm: 8px;
-    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --transition-fast: 0.2s ease;
-    --nav-height: 72px;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+    --glass-blur: blur(12px);
+    --nav-height: 76px;
+    --max-content-width: 480px;
 }
 
 body.light,
 body[data-theme="light"] {
     --bg: #f3f4f6;
     --surface: #ffffff;
-    --surface-card: #f9fafb;
+    --surface-card: rgba(249, 250, 251, 0.75);
     --surface-active: #e5e7eb;
-    --border: #e5e7eb;
+    --border: rgba(0, 0, 0, 0.06);
     --text: #111827;
     --text-muted: #6b7280;
 }
@@ -47,18 +50,20 @@ body {
     display: flex;
     justify-content: center;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
 }
 
 .hidden {
     display: none !important;
 }
 
-.hidden-fallback {
+.hidden-meta-structure,
+.container-hidden-legacy {
     display: none !important;
 }
 
 /* =======================================================
-   Splash Screen Components
+   Splash Screen Loading Interface
    ======================================================= */
 #splash-screen {
     position: fixed;
@@ -72,149 +77,196 @@ body {
 }
 
 .cube-logo-animation {
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
     position: relative;
     transform-style: preserve-3d;
-    animation: rotateCube 4s infinite linear;
-    margin-bottom: 20px;
+    animation: rotateSystemCube 4s infinite linear;
+    margin-bottom: 24px;
 }
 
 .cube-logo-animation .face {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
     border: 2px solid #030712;
 }
 
-.cube-logo-animation .front  { transform: rotateY(0deg) translateZ(30px); background: #ef4444; }
-.cube-logo-animation .back   { transform: rotateY(180deg) translateZ(30px); background: #f97316; }
-.cube-logo-animation .left   { transform: rotateY(-90deg) translateZ(30px); background: #3b82f6; }
-.cube-logo-animation .right  { transform: rotateY(90deg) translateZ(30px); background: #22c55e; }
-.cube-logo-animation .top    { transform: rotateX(90deg) translateZ(30px); background: #ffffff; }
-.cube-logo-animation .bottom { transform: rotateX(-90deg) translateZ(30px); background: #eab308; }
+.cube-logo-animation .front  { transform: rotateY(0deg) translateZ(32px); background: #ef4444; }
+.cube-logo-animation .back   { transform: rotateY(180deg) translateZ(32px); background: #f97316; }
+.cube-logo-animation .left   { transform: rotateY(-90deg) translateZ(32px); background: #3b82f6; }
+.cube-logo-animation .right  { transform: rotateY(90deg) translateZ(32px); background: #22c55e; }
+.cube-logo-animation .top    { transform: rotateX(90deg) translateZ(32px); background: #ffffff; }
+.cube-logo-animation .bottom { transform: rotateX(-90deg) translateZ(32px); background: #eab308; }
 
-@keyframes rotateCube {
+@keyframes rotateSystemCube {
     0% { transform: rotateX(0deg) rotateY(0deg); }
     100% { transform: rotateX(360deg) rotateY(360deg); }
 }
 
 .splash-title {
-    font-size: 1.6rem;
+    font-size: 1.65rem;
     font-weight: 800;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
 }
 .splash-title span { color: var(--primary); }
-.splash-subtitle { color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; }
+.splash-subtitle { color: var(--text-muted); font-size: 0.85rem; margin-top: 6px; }
 
 .progress-track {
-    width: 200px;
-    height: 4px;
+    width: 220px;
+    height: 5px;
     background: #374151;
-    border-radius: 2px;
-    margin-top: 24px;
+    border-radius: 99px;
+    margin-top: 28px;
     overflow: hidden;
 }
 #loading-progress {
     width: 0%;
     height: 100%;
     background: var(--primary);
-    transition: width 0.3s ease;
+    transition: width 0.3s linear;
 }
 
 /* =======================================================
-   Production Main Application Container Layout
+   Application Frame and Workspace Structure
    ======================================================= */
 #main-app {
     width: 100%;
-    max-width: 480px;
+    max-width: var(--max-content-width);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     background-color: var(--surface);
     position: relative;
     padding-bottom: var(--nav-height);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 .app-header {
-    height: 60px;
+    height: 64px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 20px;
     border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    z-index: 10;
+}
+
+.header-branding {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .app-header h2 {
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 .header-actions {
     display: flex;
-    gap: 6px;
+    gap: 8px;
 }
 
 .icon-btn {
     background: transparent;
     border: none;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     padding: 6px;
     border-radius: var(--radius-sm);
     cursor: pointer;
+    transition: background-color 0.2s;
+}
+.icon-btn:hover {
+    background-color: var(--surface-active);
 }
 
 .workspace-container {
-    padding: 12px 16px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     flex-grow: 1;
 }
 
 /* =======================================================
-   Metadata Counter Row
+   Metadata Counter Metric Row Style
    ======================================================= */
-.status-metrics-row {
+.metrics-summary-strip {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 4px 2px;
+    padding: 2px 4px;
 }
 
-.metric-pill {
+.metric-pill-inline {
     font-size: 0.95rem;
     font-weight: 600;
 }
 
-.metric-label {
+.metric-pill-inline .lbl {
     color: var(--text-muted);
 }
 
-.metric-value {
+.metric-pill-inline .val {
     color: var(--text);
     margin-left: 4px;
 }
 
 /* =======================================================
-   3D WebGL Cube Viewer Panel
+   3D Viewport Presentation Layout
    ======================================================= */
 .viewport-panel {
     width: 100%;
 }
 
+.canvas-card {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: var(--surface-card);
+    backdrop-filter: var(--glass-blur);
+    padding: 12px;
+    position: relative;
+    box-shadow: var(--shadow);
+}
+
+.card-header-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.4);
+    padding: 4px 10px;
+    border-radius: 99px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.pulse-indicator {
+    width: 6px;
+    height: 6px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    display: inline-block;
+}
+
 #viewer {
     width: 100%;
     aspect-ratio: 1 / 1;
-    background: #030712;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
+    background: #040711;
+    border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: var(--shadow-soft);
 }
 
 /* =======================================================
-   Core Operations Controls Pane
+   Dynamic Center Operations Context Pane
    ======================================================= */
 .controls-sidebar-pane {
     display: flex;
@@ -222,10 +274,10 @@ body {
     gap: 16px;
 }
 
-/* Full Width Action Validation Button */
-.validate-full-width {
+/* Full Width Primary Form Action trigger */
+.validate-action-button-full {
     width: 100%;
-    padding: 14px;
+    padding: 15px;
     font-family: inherit;
     font-size: 1rem;
     font-weight: 700;
@@ -234,27 +286,33 @@ body {
     background-color: var(--surface-card);
     color: var(--text);
     cursor: pointer;
-    box-shadow: var(--shadow-soft);
-    transition: background-color var(--transition-fast);
+    box-shadow: var(--shadow);
+    transition: background-color 0.2s, transform 0.1s;
 }
 
-.validate-full-width:not(:disabled):hover {
+.validate-action-button-full:not(:disabled):hover {
     background-color: var(--surface-active);
 }
 
-.validate-full-width:disabled {
-    opacity: 0.5;
+.validate-action-button-full:active {
+    transform: scale(0.99);
+}
+
+.validate-action-button-full:disabled {
+    opacity: 0.4;
     cursor: not-allowed;
 }
 
 /* =======================================================
-   Sticker Color Picker Horizontal Row Palette
+   Color Picker Horizontal Sequence Palette Architecture
    ======================================================= */
 .palette-card {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 4px 0;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--surface-card);
+    backdrop-filter: var(--glass-blur);
+    padding: 16px;
+    box-shadow: var(--shadow);
 }
 
 .card-section-title h4 {
@@ -262,82 +320,162 @@ body {
     font-weight: 700;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.75px;
+    margin-bottom: 12px;
 }
 
-.color-picker-grid-horizontal {
+.color-picker-grid {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 4px 0;
+    gap: 6px;
 }
 
-.color-picker-grid-horizontal .color-btn {
+.color-picker-grid .color-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
     background: transparent;
     border: none;
     cursor: pointer;
-    padding: 0;
+    padding: 4px 0;
     margin: 0;
     outline: none;
-    gap: 6px;
+    gap: 8px;
     flex: 1;
+    transition: transform 0.2s;
 }
 
-/* Render circular color dots directly */
-.color-picker-grid-horizontal .swatch {
-    width: 32px;
-    height: 32px;
+.color-picker-grid .swatch {
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     border: 2px solid transparent;
-    transition: transform var(--transition-fast), border-color var(--transition-fast);
+    transition: transform 0.2s, border-color 0.2s;
 }
 
-.color-picker-grid-horizontal .color-btn.active .swatch {
+.color-picker-grid .color-btn:hover .swatch {
+    transform: scale(1.08);
+}
+
+.color-picker-grid .color-btn.active .swatch {
     border-color: var(--primary);
-    transform: scale(1.1);
+    transform: scale(1.15);
 }
 
-/* Native class map background overrides */
-.white-swatch  { background-color: #ffffff; border: 1px solid #d1d5db !important; }
-.green-swatch  { background-color: #22c55e; }
-.red-swatch    { background-color: #ef4444; }
-.blue-swatch   { background-color: #3b82f6; }
-.orange-swatch { background-color: #f97316; }
-.yellow-swatch { background-color: #eab308; }
+/* Dynamic Class Swatch Configurations Mapping overrides */
+.white .swatch  { background-color: #ffffff; border: 1px solid #d1d5db !important; }
+.green .swatch  { background-color: #22c55e; }
+.red .swatch    { background-color: #ef4444; }
+.blue .swatch   { background-color: #3b82f6; }
+.orange .swatch { background-color: #f97316; }
+.yellow .swatch { background-color: #eab308; }
 
-/* Keep metadata hidden except the target numerical tags underneath */
-.color-picker-grid-horizontal .color-name {
+/* Suppress color label text strings completely for row compactness */
+.color-picker-grid .color-name {
     display: none !important;
 }
 
-.color-picker-grid-horizontal .count-tag {
+.color-picker-grid .count-tag {
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-muted);
 }
 
-.color-picker-grid-horizontal .color-btn.active .count-tag {
+.color-picker-grid .color-btn.active .count-tag {
     color: var(--primary);
     font-weight: 700;
 }
 
 /* =======================================================
-   Hidden Legacy Metric Placeholders
+   Solution Execution Output Frame
    ======================================================= */
-.output-results-panel-hidden {
-    display: none !important;
+.output-results-panel {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--surface-card);
+    padding: 16px;
+    box-shadow: var(--shadow);
 }
 
+.panel-section-header h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.metrics-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.stat-box {
+    background: rgba(0, 0, 0, 0.15);
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    border: 1px solid var(--border);
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.stat-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.algorithm-readout-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.readout-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.algorithm-string {
+    font-family: monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    color: var(--success);
+    background: rgba(34, 197, 94, 0.08);
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.spinner-loader {
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: systemSpin 0.8s linear infinite;
+    margin: 8px auto;
+}
+@keyframes systemSpin { to { transform: rotate(360deg); } }
+
 /* =======================================================
-   Bottom Navigation Architecture Dock
+   Sticky Bottom Navigation Dock Setup
    ======================================================= */
-.bottom-nav-dock {
+.app-bottom-navigation-bar {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -349,18 +487,18 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0 16px;
-    z-index: 100;
+    z-index: 90;
 }
 
-.nav-action-btn {
-    padding: 10px 20px;
+.nav-btn {
+    padding: 12px 24px;
     font-family: inherit;
     font-size: 0.95rem;
     font-weight: 600;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     border: none;
     cursor: pointer;
-    transition: background-color var(--transition-fast), color var(--transition-fast);
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .prev-step-btn {
@@ -370,19 +508,19 @@ body {
 
 .prev-step-btn:hover {
     color: var(--text);
-    background-color: var(--surface-card);
+    background-color: var(--surface-active);
 }
 
-.nav-action-right-slot {
+.nav-right-slot-container {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    width: 140px;
+    width: 150px;
     height: 100%;
 }
 
-/* Stack Next and Solve exactly on top of each other */
+/* Next and Solve button stack overlap setup to preserve runtime visibility changes exactly */
 .next-step-btn,
 .execute-solve-btn {
     position: absolute;
@@ -393,47 +531,52 @@ body {
 .next-step-btn {
     background-color: var(--primary);
     color: #ffffff;
-    z-index: 2;
+    z-index: 5;
+}
+.next-step-btn:hover {
+    background-color: var(--primary-hover);
 }
 
-.next-step-btn[style*="display: none"] {
+.next-step-btn[style*="display: none"],
+.next-step-btn[style*="display:none"] {
     display: none !important;
 }
 
 .execute-solve-btn {
     background-color: var(--success);
     color: #ffffff;
-    z-index: 1;
+    z-index: 4;
 }
-
-/* Alternate display behavior handled naturally via script rules injection templates */
+.execute-solve-btn:not(:disabled):hover {
+    background-color: var(--success-hover);
+}
 .execute-solve-btn:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* =======================================================
-   Toast Messages System Elements
+   System Notification Toast Node Interface
    ======================================================= */
 .toast-notification-node {
     position: fixed;
     bottom: calc(var(--nav-height) + 16px);
     left: 50%;
     transform: translateX(-50%);
-    background: #111827;
+    background: #1f2937;
     color: #ffffff;
-    padding: 10px 20px;
-    border-radius: 9999px;
+    padding: 12px 24px;
+    border-radius: 999px;
     font-size: 0.85rem;
     font-weight: 500;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.25s ease;
-    z-index: 999;
-    border: 1px solid #374151;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+    border: 1px solid var(--border);
 }
 
 .toast-notification-node.show {
     opacity: 1;
 }
-
