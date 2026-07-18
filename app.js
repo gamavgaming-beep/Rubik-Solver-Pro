@@ -1,20 +1,13 @@
-/**
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-==========================================================
-
-Rubik Solver Pro
-
-app.js - Part 1 (Core State & Engine Initialization)
-
-ES Modules & CubeEngine Integration
-
-==========================================================
-*/
-
-
-import CubeEngine from "./cube-engine.js";
+/* ==========================================
+   Rubik Solver Pro
+   App Initialization
+========================================== */
 
 // ---------- DOM Elements ----------
+
 const splashScreen = document.getElementById("splash-screen");
 const mainApp = document.getElementById("main-app");
 const loadingProgress = document.getElementById("loading-progress");
@@ -25,868 +18,771 @@ const solverPage = document.getElementById("solver-page");
 const finishPage = document.getElementById("finish-page");
 
 const toast = document.getElementById("toast");
-const viewer = document.getElementById("viewer");
 
-// ---------- App UI State ----------
-const appState = {
-currentFace: 0,
-totalFaces: 6,
-selectedColor: "white",
-filledStickers: 0,
-cubeValidated: false,
-cubeSolved: false,
-solving: false
-};
-
-// ---------- Cube Engine Global Instance ----------
-let engine = null;
-
-// ---------- Utility Helpers ----------
-function sleep(ms) {
-return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function showToast(message) {
-if (!toast) return;
-toast.textContent = message;
-toast.classList.add("show");
-
-setTimeout(() => {  
-    toast.classList.remove("show");  
-}, 2500);
-
-}
-
-// ---------- Correct CubeEngine Initialization ----------
-function initEngine() {
-if (!viewer) {
-console.error("Initialization Error: #viewer container element not found.");
-return;
-}
-
-// Instantiating the engine instance according to its public contract API  
-engine = new CubeEngine();  
-
-// Calling the explicit lifecycle initialization method with the DOM element container  
-engine.initialize(viewer);  
-
-// Synchronize initial configuration parameters to the active engine state  
-if (typeof COLOR_TO_FACE !== "undefined" && COLOR_TO_FACE[appState.selectedColor]) {  
-    engine.activeColor = COLOR_TO_FACE[appState.selectedColor];  
-} else {  
-    engine.activeColor = "U"; // Fallback safe default matching top face  
-}  
-
-// Link structural change updates back to interactive state management flows  
-engine.onStateChanged = () => {  
-    if (typeof syncEngineToCubeState === "function") {  
-        syncEngineToCubeState();  
-    }  
-    if (typeof refreshEditor === "function") {  
-        refreshEditor();  
-    }  
-};  
-
-engine.onStickerTapped = (clickedSticker) => {  
-    if (engine && appState.selectedColor && typeof COLOR_TO_FACE !== "undefined") {  
-        const targetFaceCode = COLOR_TO_FACE[appState.selectedColor];  
-        engine.setStickerColor(clickedSticker, targetFaceCode);  
-    }  
-};  
-
-// Orient view orientation cleanly to match default state matrix context safely  
-if (typeof FACE_NAMES !== "undefined" && typeof engine.navigateToFace === "function") {  
-    engine.navigateToFace(FACE_NAMES[appState.currentFace]);  
-}
-
-}
-/**
-
-==========================================================
-
-Rubik Solver Pro
-
-app.js - Part 2 (Data Synchronization & Mapping Engine)
-
-ES Modules & CubeEngine Interface Alignment
-
-==========================================================
-*/
-
-
-// ---------- Color & Face Structural Mappers ----------
-const COLOR_TO_FACE = {
-white: "U",
-red: "R",
-green: "F",
-yellow: "D",
-orange: "L",
-blue: "B"
-};
-
-const FACE_TO_COLOR = {
-U: "white",
-R: "red",
-F: "green",
-D: "yellow",
-L: "orange",
-B: "blue"
-};
-
-/**
-
-Reads the 3D engine's internal sticker states directly using its native
-
-structural properties and maps them back into the application's verification arrays.
-*/
-function syncEngineToCubeState() {
-// Clear state management registers clean before repopulating
-Object.keys(cubeState).forEach(face => {
-cubeState[face].fill(null);
-});
-
-Object.keys(colorUsage).forEach(color => {
-colorUsage[color] = 0;
-});
-
-if (!engine || !engine.stickers) return;
-
-engine.stickers.forEach(sticker => {
-if (!sticker || !sticker.userData) return;
-
-// Retrieve properties exactly as managed inside cube-engine.js  
- const nativeFaceLetter = sticker.userData.currentFace;   
- const activeColorCode = sticker.userData.color;          
-
- if (nativeFaceLetter && activeColorCode) {  
-     const stickerIndex = getStickerIndex(sticker, nativeFaceLetter);  
-
-     if (stickerIndex >= 0 && stickerIndex < 9) {  
-         // Store face code notation into the validation state matrix  
-         if (activeColorCode in FACE_TO_COLOR) {  
-             cubeState[nativeFaceLetter][stickerIndex] = activeColorCode;  
-         } else if (activeColorCode in COLOR_TO_FACE) {  
-             cubeState[nativeFaceLetter][stickerIndex] = COLOR_TO_FACE[activeColorCode];  
-         }  
-     }  
-
-     // Standardize key format to update the active palette limit counters  
-     const colorName = FACE_TO_COLOR[activeColorCode] || activeColorCode;  
-     if (colorName in colorUsage) {  
-         colorUsage[colorName]++;  
-     }  
- }
-
-});
-}
-
-
-/**
-
-Extracts the 0-8 facelet positioning index from the engine's
-
-internal data structures without calculating spatial coordinates.
-
-@param {THREE.Mesh} sticker - The target sticker mesh entity from the engine.
-
-@param {string} faceLetter - The shorthand letter notation of the cube face.
-
-@returns {number} The absolute 0 to 8 localized layout index.
-*/
-function getStickerIndex(sticker, faceLetter) {
-if (!sticker || !sticker.userData || sticker.userData.grid === undefined) {
-return -1;
-}
-
-// Directly access the grid index mapped by the engine's underlying layout
-return Number(sticker.userData.grid);
-}
-/**
-
-==========================================================
-
-Rubik Solver Pro
-
-app.js - Part 3 (Professional Face Navigation Workflow)
-
-ES Modules & Guided Step Architecture
-
-==========================================================
-*/
-
-
-// ---------- Strict Workflow Navigation Sequence ----------
-const NAVIGATION_SEQUENCE = ["F", "R", "B", "L", "U", "D"];
-
-const nextFaceBtn = document.getElementById("btn-next-face");
-const faceCounterEl = document.getElementById("face-counter");
-const faceProgressEl = document.getElementById("face-progress");
-
-/**
-
-Updates the UI elements tracking face progression and manages
-
-the operational lifecycle states of workflow control buttons.
-*/
-function updateFaceCounter() {
-if (faceCounterEl) {
-faceCounterEl.textContent = ${appState.currentFace + 1} / ${appState.totalFaces};
-}
-if (faceProgressEl) {
-faceProgressEl.value = appState.currentFace + 1;
-}
-
-// Checking if the wizard has arrived at the final face (Down Face)
-if (NAVIGATION_SEQUENCE[appState.currentFace] === "D") {
-if (nextFaceBtn) {
-nextFaceBtn.disabled = true;
-}
-if (validateBtn) {
-validateBtn.disabled = false;
-}
-} else {
-if (nextFaceBtn) {
-nextFaceBtn.disabled = false;
-}
-}
-}
-
-
-// ---------- Next Face Step Event Registration ----------
-if (nextFaceBtn) {
-nextFaceBtn.addEventListener("click", () => {
-// Prevent indexing overflow or rolling back to the starting face
-if (appState.currentFace >= NAVIGATION_SEQUENCE.length - 1) {
-return;
-}
-
-// Forward progress increment along the strict linear sequence  
-    appState.currentFace++;  
-      
-    const targetFaceCode = NAVIGATION_SEQUENCE[appState.currentFace];  
-      
-    // Command the underlying 3D camera matrices via the engine's navigation interface  
-    if (engine && typeof engine.navigateToFace === "function") {  
-        engine.navigateToFace(targetFaceCode);  
-    }  
-
-    // Repaint component structures and progress bars  
-    if (typeof refreshEditor === "function") {  
-        refreshEditor();  
-    } else {  
-        updateFaceCounter();  
-    }  
-
-    showToast(`Switched view to ${targetFaceCode} Face`);  
-});
-
-}
-
-/**
-
-Global interface manager routing batch state redraw signals across control blocks
-*/
-function refreshEditor() {
-updateFaceCounter();
-
-if (typeof updateFilledCounter === "function") {
-updateFilledCounter();
-}
-if (typeof updateColorCounters === "function") {
-updateColorCounters();
-}
-}
-/**
-
-==========================================================
-
-Rubik Solver Pro
-
-app.js - Part 4 (UI Integration & Action Handlers)
-
-ES Modules & Event Binding Completion
-
-==========================================================
-*/
-
-
-// ---------- State Registration for Synchronization ----------
-const colorUsage = {
-white: 0,
-red: 0,
-green: 0,
-yellow: 0,
-orange: 0,
-blue: 0
-};
-
-const cubeState = {
-U: Array(9).fill(null),
-R: Array(9).fill(null),
-F: Array(9).fill(null),
-D: Array(9).fill(null),
-L: Array(9).fill(null),
-B: Array(9).fill(null)
-};
-
-// ---------- UI Element Bindings ----------
-const colorButtons = document.querySelectorAll(".color-btn");
-const filledCountEl = document.getElementById("filled-count");
-const validateBtn = document.getElementById("validate-btn");
-const solveBtn = document.getElementById("solve-btn");
-
-const colorCounters = {
-white: document.getElementById("count-white"),
-yellow: document.getElementById("count-yellow"),
-red: document.getElementById("count-red"),
-orange: document.getElementById("count-orange"),
-blue: document.getElementById("count-blue"),
-green: document.getElementById("count-green")
-};
-
-// ---------- Color Picker Handling ----------
-colorButtons.forEach(button => {
-button.addEventListener("click", () => {
-const color = button.dataset.color;
-if (!color) return;
-
-appState.selectedColor = color;  
-
-    // Repaint active color indicator styling across selection track  
-    colorButtons.forEach(btn => btn.classList.remove("active"));  
-    button.classList.add("active");  
-
-    // Transmit chosen surface color down into active engine interface  
-    if (engine && typeof COLOR_TO_FACE !== "undefined") {  
-        engine.activeColor = COLOR_TO_FACE[color];  
-    }  
-});
-
-});
-
-// ---------- Counter Redraw Functions ----------
-function updateColorCounters() {
-Object.keys(colorUsage).forEach(color => {
-if (colorCounters[color]) {
-colorCounters[color].textContent = ${colorUsage[color]}/9;
-}
-});
-}
-
-function updateFilledCounter() {
-let total = 0;
-Object.keys(cubeState).forEach(face => {
-cubeState[face].forEach(sticker => {
-if (sticker !== null) {
-total++;
-}
-});
-});
-
-appState.filledStickers = total;  
-if (filledCountEl) {  
-    filledCountEl.textContent = `${total} / 54`;  
-}
-
-}
-
-// ---------- Validation Architecture ----------
-function validateCube() {
-const validationCounts = { U: 0, R: 0, F: 0, D: 0, L: 0, B: 0 };
-
-for (const face of Object.keys(cubeState)) {  
-    for (const sticker of cubeState[face]) {  
-        if (!sticker) {  
-            showToast("Error: Complete all 54 stickers before validation.");  
-            return false;  
-        }  
-        if (!(sticker in validationCounts)) {  
-            showToast("Error: Target face configuration contains structural corruption.");  
-            return false;  
-        }  
-        validationCounts[sticker]++;  
-    }  
-}  
-
-for (const faceCode of Object.keys(validationCounts)) {  
-    if (validationCounts[faceCode] !== 9) {  
-        showToast(`Error: ${faceCode} color facelets must appear exactly 9 times.`);  
-        return false;  
-    }  
-}  
-
-appState.cubeValidated = true;  
-showToast("Cube verification successful! Ready to solve.");  
-return true;
-
-}
-
-if (validateBtn) {
-validateBtn.addEventListener("click", () => {
-if (validateCube()) {
-if (solveBtn) {
-solveBtn.disabled = false;
-}
-}
-});
-}
-
-// ---------- Solver Algorithm Execution Trigger ----------
-if (solveBtn) {
-solveBtn.disabled = true; // Lock execution access down tight until verified safe
-solveBtn.addEventListener("click", () => {
-if (!appState.cubeValidated) {
-showToast("Please validate the layout configuration first.");
-return;
-}
-
-if (typeof window.solveCube === "function") {  
-        window.solveCube(cubeState);  
-    } else {  
-        showToast("Executing solver pipeline... Processing matrix matrix.");  
-        document.dispatchEvent(new CustomEvent("cubeReadyForSolver", {  
-            detail: { cubeState }  
-        }));  
-    }  
-});
-
-}
-
-// ---------- Direct Application Bootstrap Lifecycle ----------
-window.addEventListener("load", () => {
-const initialActiveBtn = document.querySelector([data-color="${appState.selectedColor}"]);
-if (initialActiveBtn) {
-initialActiveBtn.classList.add("active");
-}
-});
-/**
-
-==========================================================
-
-Rubik Solver Pro
-
-app.js - Unified Production Engine (Final Integrated Version)
-
-ES Modules & Seamless Multi-Module Lifecycle Integration
-
-==========================================================
-*/
-
-
-import CubeEngine from "./cube-engine.js";
-
-// =========================================================
-// 1. Core Data Structures, Mappers & Configuration Constants
-// =========================================================
-
-const NAVIGATION_SEQUENCE = ["F", "R", "B", "L", "U", "D"];
-
-const COLOR_TO_FACE = {
-white: "U",
-red: "R",
-green: "F",
-yellow: "D",
-orange: "L",
-blue: "B"
-};
-
-const FACE_TO_COLOR = {
-U: "white",
-R: "red",
-F: "green",
-D: "yellow",
-L: "orange",
-B: "blue"
-};
-
-// =========================================================
-// 2. Global Application State Trackers
-// =========================================================
+// ---------- App State ----------
 
 const appState = {
-currentFace: 0,
-totalFaces: 6,
-selectedColor: "white",
-filledStickers: 0,
-cubeValidated: false,
-cubeSolved: false,
-solving: false
+
+    currentFace: 0,
+
+    totalFaces: 6,
+
+    selectedColor: "white",
+
+    filledStickers: 0,
+
+    cubeValidated: false,
+
+    cubeSolved: false,
+
+    solving: false
+
 };
 
-const colorUsage = {
-white: 0,
-red: 0,
-green: 0,
-yellow: 0,
-orange: 0,
-blue: 0
-};
-
-const cubeState = {
-U: Array(9).fill(null),
-R: Array(9).fill(null),
-F: Array(9).fill(null),
-D: Array(9).fill(null),
-L: Array(9).fill(null),
-B: Array(9).fill(null)
-};
-
-// Centralized reference to the 3D CubeEngine core instance
-let engine = null;
-
-// =========================================================
-// 3. DOM Element Bindings
-// =========================================================
-
-const splashScreen = document.getElementById("splash-screen");
-const mainApp = document.getElementById("main-app");
-const loadingProgress = document.getElementById("loading-progress");
-
-const toast = document.getElementById("toast");
-const viewer = document.getElementById("viewer");
-
-const nextFaceBtn = document.getElementById("btn-next-face");
-const faceCounterEl = document.getElementById("face-counter");
-const faceProgressEl = document.getElementById("face-progress");
-
-const colorButtons = document.querySelectorAll(".color-btn");
-const filledCountEl = document.getElementById("filled-count");
-const validateBtn = document.getElementById("validate-btn");
-const solveBtn = document.getElementById("solve-btn");
-
-const themeBtn = document.getElementById("theme-btn");
-const settingsBtn = document.getElementById("settings-btn");
-
-const colorCounters = {
-white: document.getElementById("count-white"),
-yellow: document.getElementById("count-yellow"),
-red: document.getElementById("count-red"),
-orange: document.getElementById("count-orange"),
-blue: document.getElementById("count-blue"),
-green: document.getElementById("count-green")
-};
-
-// =========================================================
-// 4. Utility Handlers & Notifications
-// =========================================================
+// ---------- Utility ----------
 
 function sleep(ms) {
-return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+// ---------- Toast ----------
 
 function showToast(message) {
-if (!toast) return;
-toast.textContent = message;
-toast.classList.add("show");
 
-setTimeout(() => {  
-    toast.classList.remove("show");  
-}, 2500);
+    toast.textContent = message;
 
-}
+    toast.classList.add("show");
 
-// =========================================================
-// 5. Data Synchronization & Structural Matrix Mappers
-// =========================================================
+    setTimeout(() => {
 
-/**
+        toast.classList.remove("show");
 
-Reads internal properties directly from the 3D Engine objects
-
-and maps them symmetrically back into state arrays.
-*/
-function syncEngineToCubeState() {
-Object.keys(cubeState).forEach(face => {
-cubeState[face].fill(null);
-});
-
-Object.keys(colorUsage).forEach(color => {
-colorUsage[color] = 0;
-});
-
-if (!engine || !engine.stickers) return;
-
-engine.stickers.forEach(sticker => {
-if (!sticker || !sticker.userData) return;
-
-const nativeFaceLetter = sticker.userData.currentFace;   
- const activeColorCode = sticker.userData.color;          
-
- if (nativeFaceLetter && activeColorCode) {  
-     const stickerIndex = getStickerIndex(sticker, nativeFaceLetter);  
-
-     if (stickerIndex >= 0 && stickerIndex < 9) {  
-         if (activeColorCode in FACE_TO_COLOR) {  
-             cubeState[nativeFaceLetter][stickerIndex] = activeColorCode;  
-         } else if (activeColorCode in COLOR_TO_FACE) {  
-             cubeState[nativeFaceLetter][stickerIndex] = COLOR_TO_FACE[activeColorCode];  
-         }  
-     }  
-
-     const colorName = FACE_TO_COLOR[activeColorCode] || activeColorCode;  
-     if (colorName in colorUsage) {  
-         colorUsage[colorName]++;  
-     }  
- }
-
-});
-}
-
-
-/**
-
-Pulls zero-indexed positions directly from the engine's data array mapping.
-*/
-function getStickerIndex(sticker, faceLetter) {
-if (!sticker || !sticker.userData || sticker.userData.grid === undefined) {
-return -1;
-}
-return Number(sticker.userData.grid);
-}
-
-
-// =========================================================
-// 6. UI Rendering & Component Repaint Controllers
-// =========================================================
-
-function updateColorCounters() {
-Object.keys(colorUsage).forEach(color => {
-if (colorCounters[color]) {
-colorCounters[color].textContent = ${colorUsage[color]}/9;
-}
-});
-}
-
-function updateFilledCounter() {
-let total = 0;
-Object.keys(cubeState).forEach(face => {
-cubeState[face].forEach(sticker => {
-if (sticker !== null) total++;
-});
-});
-
-appState.filledStickers = total;  
-if (filledCountEl) {  
-    filledCountEl.textContent = `${total} / 54`;  
-}
+    }, 2500);
 
 }
 
-function updateFaceCounter() {
-if (faceCounterEl) {
-faceCounterEl.textContent = ${appState.currentFace + 1} / ${appState.totalFaces};
-}
-if (faceProgressEl) {
-faceProgressEl.value = appState.currentFace + 1;
-}
-
-if (NAVIGATION_SEQUENCE[appState.currentFace] === "D") {  
-    if (nextFaceBtn) nextFaceBtn.disabled = true;  
-    if (validateBtn) validateBtn.disabled = false;  
-} else {  
-    if (nextFaceBtn) nextFaceBtn.disabled = false;  
-    if (validateBtn) validateBtn.disabled = true;  
-}
-
-}
-
-function refreshEditor() {
-updateFaceCounter();
-updateFilledCounter();
-updateColorCounters();
-}
-
-// =========================================================
-// 7. Core Verification & Validation Logic
-// =========================================================
-
-function validateCube() {
-const validationCounts = { U: 0, R: 0, F: 0, D: 0, L: 0, B: 0 };
-
-for (const face of Object.keys(cubeState)) {  
-    for (const sticker of cubeState[face]) {  
-        if (!sticker) {  
-            showToast("Error: Complete all 54 stickers before validation.");  
-            return false;  
-        }  
-        if (!(sticker in validationCounts)) {  
-            showToast("Error: Layout configuration contains structural corruption.");  
-            return false;  
-        }  
-        validationCounts[sticker]++;  
-    }  
-}  
-
-for (const faceCode of Object.keys(validationCounts)) {  
-    if (validationCounts[faceCode] !== 9) {  
-        showToast(`Error: ${faceCode} color facelets must appear exactly 9 times.`);  
-        return false;  
-    }  
-}  
-
-appState.cubeValidated = true;  
-showToast("Cube verification successful! Ready to solve.");  
-return true;
-
-}
-
-// =========================================================
-// 8. Event Subscriptions & Interactive Triggers
-// =========================================================
-
-if (nextFaceBtn) {
-nextFaceBtn.addEventListener("click", () => {
-if (appState.currentFace >= NAVIGATION_SEQUENCE.length - 1) return;
-
-appState.currentFace++;  
-    const targetFaceCode = NAVIGATION_SEQUENCE[appState.currentFace];  
-      
-    if (engine && typeof engine.navigateToFace === "function") {  
-        engine.navigateToFace(targetFaceCode);  
-    }  
-
-    refreshEditor();  
-    showToast(`Switched view to ${targetFaceCode} Face`);  
-});
-
-}
-
-colorButtons.forEach(button => {
-button.addEventListener("click", () => {
-const color = button.dataset.color;
-if (!color) return;
-
-appState.selectedColor = color;  
-    colorButtons.forEach(btn => btn.classList.remove("active"));  
-    button.classList.add("active");  
-
-    if (engine) {  
-        engine.activeColor = COLOR_TO_FACE[color];  
-    }  
-});
-
-});
-
-if (validateBtn) {
-validateBtn.addEventListener("click", () => {
-if (validateCube() && solveBtn) {
-solveBtn.disabled = false;
-}
-});
-}
-
-if (solveBtn) {
-solveBtn.disabled = true;
-solveBtn.addEventListener("click", () => {
-if (!appState.cubeValidated) {
-showToast("Please validate the layout configuration first.");
-return;
-}
-
-if (typeof window.solveCube === "function") {  
-        window.solveCube(cubeState);  
-    } else {  
-        showToast("Executing solver pipeline... Dispatching configuration matrix.");  
-        document.dispatchEvent(new CustomEvent("cubeReadyForSolver", {  
-            detail: { cubeState }  
-        }));  
-    }  
-});
-
-}
-
-// =========================================================
-// 9. Theme Management & Personalization Engine
-// =========================================================
-
-function applyTheme(theme) {
-document.body.setAttribute("data-theme", theme);
-localStorage.setItem("theme", theme);
-if (themeBtn) {
-themeBtn.textContent = theme === "dark" ? "🌙" : "☀️";
-}
-
-if (engine && typeof engine.updateBackgroundColor === "function") {  
-    engine.updateBackgroundColor(theme === "dark" ? 0x101826 : 0xf5f7fa);  
-}
-
-}
-
-if (themeBtn) {
-let currentTheme = localStorage.getItem("theme") || "dark";
-applyTheme(currentTheme);
-
-themeBtn.addEventListener("click", () => {  
-    currentTheme = currentTheme === "dark" ? "light" : "dark";  
-    applyTheme(currentTheme);  
-});
-
-}
-
-if (settingsBtn) {
-settingsBtn.addEventListener("click", () => {
-showToast("Settings system optimized. Calibration properties active.");
-});
-}
-
-// =========================================================
-// 10. Lifecycle Initialization & Engine Instantiation
-// =========================================================
-
-function initEngine() {
-if (!viewer) {
-console.error("Initialization Error: Render container element not found.");
-return;
-}
-
-// Instantiating the engine according to the exact signature API  
-engine = new CubeEngine();  
-engine.initialize(viewer);  
-
-// Coordinate state settings cleanly down into the 3D space  
-engine.activeColor = COLOR_TO_FACE[appState.selectedColor];  
-
-engine.onStateChanged = () => {  
-    syncEngineToCubeState();  
-    refreshEditor();  
-};  
-
-engine.onStickerTapped = (clickedSticker) => {  
-    if (engine && appState.selectedColor) {  
-        const targetFaceCode = COLOR_TO_FACE[appState.selectedColor];  
-        engine.setStickerColor(clickedSticker, targetFaceCode);  
-    }  
-};  
-
-if (typeof engine.navigateToFace === "function") {  
-    engine.navigateToFace(NAVIGATION_SEQUENCE[appState.currentFace]);  
-}
-
-}
+// ---------- Splash Loading ----------
 
 async function startSplash() {
-let progress = 0;
-while (progress <= 100) {
-if (loadingProgress) {
-loadingProgress.style.width = progress + "%";
-}
-await sleep(15);
-progress++;
+
+    let progress = 0;
+
+    while (progress <= 100) {
+
+        loadingProgress.style.width = progress + "%";
+
+        await sleep(25);
+
+        progress++;
+
+    }
+
+    splashScreen.classList.add("hidden");
+
+mainApp.classList.remove("hidden");
+
+setTimeout(() => {
+
+    camera.aspect =
+        viewer.clientWidth /
+        viewer.clientHeight;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+        viewer.clientWidth,
+        viewer.clientHeight
+    );
+
+    renderer.render(scene, camera);
+
+}, 100);
+
+showToast("Welcome to Rubik Solver Pro");
+
 }
 
-if (splashScreen) splashScreen.classList.add("hidden");  
-if (mainApp) mainApp.classList.remove("hidden");  
+// ---------- Start App ----------
 
-initEngine();  
-refreshEditor();  
-showToast("System ready. Welcome to Rubik Solver Pro.");
+window.addEventListener("load", () => {
 
-}
+    startSplash();
 
-window.addEventListener("DOMContentLoaded", () => {
-const initialActiveBtn = document.querySelector([data-color="${appState.selectedColor}"]);
-if (initialActiveBtn) {
-initialActiveBtn.classList.add("active");
-}
-startSplash();
 });
+/* ==========================================
+   Theme System
+========================================== */
+
+const themeBtn = document.getElementById("theme-btn");
+
+let currentTheme = localStorage.getItem("theme") || "dark";
+
+applyTheme(currentTheme);
+
+themeBtn.addEventListener("click", () => {
+
+    currentTheme =
+        currentTheme === "dark"
+            ? "light"
+            : "dark";
+
+    applyTheme(currentTheme);
+
+});
+
+function applyTheme(theme) {
+
+    document.body.setAttribute(
+        "data-theme",
+        theme
+    );
+
+    localStorage.setItem(
+        "theme",
+        theme
+    );
+
+    themeBtn.textContent =
+        theme === "dark"
+            ? "🌙"
+            : "☀️";
+
+}
+
+/* ==========================================
+   Settings Button
+========================================== */
+
+const settingsBtn =
+document.getElementById("settings-btn");
+
+settingsBtn.addEventListener("click", () => {
+
+    showToast(
+        "Settings coming soon..."
+    );
+
+});
+
+/* ==========================================
+   Install PWA
+========================================== */
+
+const installBtn =
+document.getElementById("install-btn");
+
+let deferredPrompt = null;
+
+window.addEventListener(
+    "beforeinstallprompt",
+    (event) => {
+
+        event.preventDefault();
+
+        deferredPrompt = event;
+
+        installBtn.style.display = "inline-flex";
+
+    }
+);
+
+installBtn.addEventListener(
+    "click",
+    async () => {
+
+        if (!deferredPrompt) {
+
+            showToast(
+                "Install not available."
+            );
+
+            return;
+
+        }
+
+        deferredPrompt.prompt();
+
+        await deferredPrompt.userChoice;
+
+        deferredPrompt = null;
+
+        installBtn.style.display = "none";
+
+    }
+);
+
+window.addEventListener(
+    "appinstalled",
+    () => {
+
+        showToast(
+            "Rubik Solver installed!"
+        );
+
+        installBtn.style.display = "none";
+
+    }
+);
+/* ==========================================
+   Color Picker
+========================================== */
+
+const colorButtons = document.querySelectorAll(".color-btn");
+
+const colorCounters = {
+    white: document.getElementById("count-white"),
+    yellow: document.getElementById("count-yellow"),
+    red: document.getElementById("count-red"),
+    orange: document.getElementById("count-orange"),
+    blue: document.getElementById("count-blue"),
+    green: document.getElementById("count-green")
+};
+
+const colorUsage = {
+    white: 0,
+    yellow: 0,
+    red: 0,
+    orange: 0,
+    blue: 0,
+    green: 0
+};
+
+// Default selected color
+setActiveColor("white");
+
+colorButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const color = button.dataset.color;
+
+        setActiveColor(color);
+
+    });
+
+});
+
+function setActiveColor(color) {
+
+    appState.selectedColor = color;
+
+    colorButtons.forEach(btn => {
+
+        btn.classList.remove("active");
+
+    });
+
+    document
+        .querySelector(`[data-color="${color}"]`)
+        .classList.add("active");
+
+}
+
+function updateColorCounters() {
+
+    Object.keys(colorUsage).forEach(color => {
+
+        colorCounters[color].textContent =
+            `${colorUsage[color]}/9`;
+
+        const button =
+            document.querySelector(`[data-color="${color}"]`);
+
+        button.disabled =
+            colorUsage[color] >= 9;
+
+    });
+
+}
+/* ==========================================
+   Cube Data
+========================================== */
+
+const FACE_NAMES = [
+    "U",
+    "R",
+    "F",
+    "D",
+    "L",
+    "B"
+];
+
+const cubeState = {
+
+    U: Array(9).fill(null),
+    R: Array(9).fill(null),
+    F: Array(9).fill(null),
+    D: Array(9).fill(null),
+    L: Array(9).fill(null),
+    B: Array(9).fill(null)
+
+};
+
+const filledCount =
+document.getElementById("filled-count");
+
+const validateBtn =
+document.getElementById("validate-btn");
+
+const solveBtn =
+document.getElementById("solve-btn");
+
+/* ==========================================
+   Face Counter
+========================================== */
+
+function updateFaceCounter() {
+
+    document.getElementById("face-counter").textContent =
+        `${appState.currentFace + 1} / ${appState.totalFaces}`;
+
+    document.getElementById("face-progress").value =
+        appState.currentFace + 1;
+
+}
+
+/* ==========================================
+   Filled Counter
+========================================== */
+
+function updateFilledCounter() {
+
+    let total = 0;
+
+    Object.values(cubeState).forEach(face => {
+
+        face.forEach(sticker => {
+
+            if (sticker !== null) {
+
+                total++;
+
+            }
+
+        });
+
+    });
+
+    appState.filledStickers = total;
+
+    filledCount.textContent =
+        `${total} / 54`;
+
+}
+
+/* ==========================================
+   Validate Button
+========================================== */
+
+function updateValidateButton() {
+
+    if (appState.filledStickers === 54) {
+
+        validateBtn.disabled = false;
+
+    } else {
+
+        validateBtn.disabled = true;
+
+    }
+
+}
+
+/* ==========================================
+   Cube Validation
+========================================== */
+
+function validateCube() {
+
+    const counts = {
+        U: 0,
+        R: 0,
+        F: 0,
+        D: 0,
+        L: 0,
+        B: 0
+    };
+
+    for (const face of Object.keys(cubeState)) {
+
+        for (const sticker of cubeState[face]) {
+
+            if (sticker === null) {
+
+                showToast("Complete all 54 stickers.");
+
+                return false;
+
+            }
+
+            if (!(sticker in counts)) {
+
+                showToast("Invalid sticker detected.");
+
+                return false;
+
+            }
+
+            counts[sticker]++;
+
+        }
+
+    }
+
+    for (const face of Object.keys(counts)) {
+
+        if (counts[face] !== 9) {
+
+            showToast(`${face} color must appear exactly 9 times.`);
+
+            return false;
+
+        }
+
+    }
+
+    appState.cubeValidated = true;
+
+    showToast("Cube validation successful.");
+
+    return true;
+
+}
+
+/* ==========================================
+   Validate Button Event
+========================================== */
+
+validateBtn.addEventListener("click", () => {
+
+    if (validateCube()) {
+
+        solveBtn.disabled = false;
+
+    }
+
+});
+
+/* ==========================================
+   Solve Button Event
+========================================== */
+
+solveBtn.addEventListener("click", () => {
+
+    if (!appState.cubeValidated) {
+        showToast("Validate cube first.");
+        return;
+    }
+
+    solveCube(cubeState);
+
+});
+
+/* ==========================================
+   Refresh UI
+========================================== */
+
+function refreshEditor() {
+
+    updateFaceCounter();
+
+    updateFilledCounter();
+
+    updateValidateButton();
+
+    updateColorCounters();
+
+}
+
+refreshEditor();
+
+solveBtn.disabled = true;
+
+/* ==========================================
+   Cube State Mapping
+========================================== */
+
+const COLOR_TO_FACE = {
+    white: "U",
+    red: "R",
+    green: "F",
+    yellow: "D",
+    orange: "L",
+    blue: "B"
+};
+
+function getStickerIndex(cubie, faceLetter) {
+
+    const x = cubie.userData.x;
+    const y = cubie.userData.y;
+    const z = cubie.userData.z;
+
+    switch (faceLetter) {
+
+        case "U":
+            return (1 - z) * 3 + (x + 1);
+
+        case "D":
+            return (z + 1) * 3 + (x + 1);
+
+        case "F":
+            return (1 - y) * 3 + (x + 1);
+
+        case "B":
+            return (1 - y) * 3 + (1 - x);
+
+        case "R":
+            return (1 - y) * 3 + (1 - z);
+
+        case "L":
+            return (1 - y) * 3 + (z + 1);
+
+        default:
+            return -1;
+
+    }
+
+}
+/* ==========================================
+   Three.js Scene Setup
+========================================== */
+
+const viewer = document.getElementById("viewer");
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x101826);
+
+const camera = new THREE.PerspectiveCamera(
+    45,
+    viewer.clientWidth / viewer.clientHeight,
+    0.1,
+    1000
+);
+
+camera.position.set(6, 6, 6);
+
+const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true
+});
+
+renderer.setPixelRatio(window.devicePixelRatio);
+
+renderer.setSize(
+    viewer.clientWidth,
+    viewer.clientHeight
+);
+
+viewer.appendChild(renderer.domElement);
+
+/* ==========================================
+   Lights
+========================================== */
+
+const ambientLight = new THREE.AmbientLight(
+    0xffffff,
+    2
+);
+
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(
+    0xffffff,
+    3
+);
+
+directionalLight.position.set(5, 10, 7);
+
+scene.add(directionalLight);
+
+/* ==========================================
+   Orbit Controls
+========================================== */
+
+const controls = new OrbitControls(
+    camera,
+    renderer.domElement
+);
+
+controls.enableDamping = false;
+
+controls.enableRotate = false;
+controls.enableZoom = false;
+controls.enablePan = false;
+
+camera.position.set(6,6,6);
+camera.lookAt(0,0,0);
+
+
+/* ==========================================
+   Rubik's Cube (27 Cubies)
+========================================== */
+
+const rubiksCube = new THREE.Group();
+
+const cubieSize = 0.95;
+const gap = 0.05;
+
+const colorMap = {
+    white: 0xffffff,
+    yellow: 0xffff00,
+    red: 0xff0000,
+    orange: 0xff8800,
+    blue: 0x0000ff,
+    green: 0x00aa00
+};
+
+for (let x = -1; x <= 1; x++) {
+    for (let y = -1; y <= 1; y++) {
+        for (let z = -1; z <= 1; z++) {
+
+            const materials = [
+
+    new THREE.MeshStandardMaterial({ color: 0x222222 }),
+    new THREE.MeshStandardMaterial({ color: 0x222222 }),
+    new THREE.MeshStandardMaterial({ color: 0x222222 }),
+    new THREE.MeshStandardMaterial({ color: 0x222222 }),
+    new THREE.MeshStandardMaterial({ color: 0x222222 }),
+    new THREE.MeshStandardMaterial({ color: 0x222222 })
+
+];
+
+            const cubie = new THREE.Mesh(
+                new THREE.BoxGeometry(
+                    cubieSize,
+                    cubieSize,
+                    cubieSize
+                ),
+                materials
+            );
+
+            cubie.position.set(
+    x * (cubieSize + gap),
+    y * (cubieSize + gap),
+    z * (cubieSize + gap)
+);
+
+cubie.userData = {
+    x,
+    y,
+    z,
+
+    painted: [null, null, null, null, null, null],
+
+    stickers: [
+        { face: "R", index: -1 },
+        { face: "L", index: -1 },
+        { face: "U", index: -1 },
+        { face: "D", index: -1 },
+        { face: "F", index: -1 },
+        { face: "B", index: -1 }
+    ]
+};
+
+rubiksCube.add(cubie);
+
+        }
+    }
+}
+
+scene.add(rubiksCube);
+
+/* ==========================================
+   Raycaster
+========================================== */
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+renderer.domElement.addEventListener(
+    "pointerdown",
+    onPointerDown
+);
+
+function onPointerDown(event) {
+
+    const rect = renderer.domElement.getBoundingClientRect();
+
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+
+    const intersects = raycaster.intersectObjects(rubiksCube.children);
+
+    if (intersects.length === 0) return;
+
+    const hit = intersects[0];
+    const cubie = hit.object;
+
+    // எந்த face-ஐ click செய்தோம்?
+const faceIndex = Math.floor(hit.faceIndex / 2);
+
+const previousColor = cubie.userData.painted[faceIndex];
+
+if (previousColor) {
+    colorUsage[previousColor]--;
+}
+
+cubie.userData.painted[faceIndex] = appState.selectedColor;
+
+colorUsage[appState.selectedColor]++;
+
+cubie.material[faceIndex].color.setHex(
+    colorMap[appState.selectedColor]
+);
+
+const faceLetter = ["R","L","U","D","F","B"][faceIndex];
+
+const stickerIndex = getStickerIndex(cubie, faceLetter);
+
+cubeState[faceLetter][stickerIndex] =
+    COLOR_TO_FACE[appState.selectedColor];
+
+updateFilledCounter();
+updateValidateButton();
+updateColorCounters();
+
+showToast(appState.selectedColor + " Applied");
+
+}
+
+/* ==========================================
+   Animation Loop
+========================================== */
+
+function animate() {
+
+    requestAnimationFrame(animate);
+
+    renderer.render(
+        scene,
+        camera
+    );
+
+}
+
+animate();
+
+/* ==========================================
+   Window Resize
+========================================== */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        camera.aspect =
+            viewer.clientWidth /
+            viewer.clientHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+            viewer.clientWidth,
+            viewer.clientHeight
+        );
+
+    }
+);
+
