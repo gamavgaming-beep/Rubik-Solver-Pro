@@ -1,582 +1,910 @@
 /* =======================================================
-   Rubik Solver Pro - Premium Mobile Layout Core Stylesheet
+   Rubik Solver Pro
+   Main Stylesheet
+   Version : 1.0
    ======================================================= */
+
+/* ==========================
+   CSS Reset
+========================== */
 
 *,
 *::before,
-*::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*::after{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-:root {
-    --bg: #090d16;
-    --surface: #111827;
-    --surface-card: rgba(31, 41, 55, 0.65);
-    --surface-active: #374151;
-    --primary: #3b82f6;
-    --primary-hover: #2563eb;
-    --success: #22c55e;
-    --success-hover: #16a34a;
-    --border: rgba(255, 255, 255, 0.08);
-    --text: #f9fafb;
-    --text-muted: #9ca3af;
-    --radius-lg: 24px;
-    --radius-md: 16px;
-    --radius-sm: 10px;
-    --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
-    --glass-blur: blur(12px);
-    --nav-height: 76px;
-    --max-content-width: 480px;
+/* ==========================
+   Root Variables
+========================== */
+
+:root{
+
+    --bg:#0f172a;
+    --surface:#1e293b;
+    --surface-2:#334155;
+
+    --primary:#3b82f6;
+    --success:#22c55e;
+    --danger:#ef4444;
+    --warning:#f59e0b;
+
+    --text:#f8fafc;
+    --text-muted:#94a3b8;
+
+    --border:#475569;
+
+    --radius:16px;
+
+    --shadow:
+        0 10px 25px rgba(0,0,0,.30);
+
+    --transition:.25s ease;
+
+    --header-height:72px;
+
 }
 
-body.light,
-body[data-theme="light"] {
-    --bg: #f3f4f6;
-    --surface: #ffffff;
-    --surface-card: rgba(249, 250, 251, 0.75);
-    --surface-active: #e5e7eb;
-    --border: rgba(0, 0, 0, 0.06);
-    --text: #111827;
-    --text-muted: #6b7280;
+/* ==========================
+   Body
+========================== */
+
+html{
+
+    scroll-behavior:smooth;
+
 }
 
-body {
-    font-family: "Plus Jakarta Sans", sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
+body{
+
+    font-family:"Poppins",sans-serif;
+
+    background:var(--bg);
+
+    color:var(--text);
+
+    min-height:100vh;
+
+    overflow-x:hidden;
+
 }
 
-.hidden {
-    display: none !important;
+/* ==========================
+   Global
+========================== */
+
+img{
+
+    display:block;
+
+    max-width:100%;
+
 }
 
-.hidden-meta-structure,
-.container-hidden-legacy {
-    display: none !important;
+button{
+
+    font-family:inherit;
+
+    cursor:pointer;
+
+    border:none;
+
+    outline:none;
+
+    transition:var(--transition);
+
 }
 
-/* =======================================================
-   Splash Screen Loading Interface
-   ======================================================= */
-#splash-screen {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: #030712;
-    z-index: 9999;
+.hidden{
+
+    display:none !important;
+
 }
 
-.cube-logo-animation {
-    width: 64px;
-    height: 64px;
-    position: relative;
-    transform-style: preserve-3d;
-    animation: rotateSystemCube 4s infinite linear;
-    margin-bottom: 24px;
+#app{
+
+    width:100%;
+
+    min-height:100vh;
+
 }
 
-.cube-logo-animation .face {
-    position: absolute;
-    width: 64px;
-    height: 64px;
-    border: 2px solid #030712;
+/* ==========================
+   Splash Screen
+========================== */
+
+#splash-screen{
+
+    position:fixed;
+
+    inset:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:25px;
+
+    background:#020617;
+
+    z-index:9999;
+
 }
 
-.cube-logo-animation .front  { transform: rotateY(0deg) translateZ(32px); background: #ef4444; }
-.cube-logo-animation .back   { transform: rotateY(180deg) translateZ(32px); background: #f97316; }
-.cube-logo-animation .left   { transform: rotateY(-90deg) translateZ(32px); background: #3b82f6; }
-.cube-logo-animation .right  { transform: rotateY(90deg) translateZ(32px); background: #22c55e; }
-.cube-logo-animation .top    { transform: rotateX(90deg) translateZ(32px); background: #ffffff; }
-.cube-logo-animation .bottom { transform: rotateX(-90deg) translateZ(32px); background: #eab308; }
+.logo-area{
 
-@keyframes rotateSystemCube {
-    0% { transform: rotateX(0deg) rotateY(0deg); }
-    100% { transform: rotateX(360deg) rotateY(360deg); }
-}
+    display:flex;
 
-.splash-title {
-    font-size: 1.65rem;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-}
-.splash-title span { color: var(--primary); }
-.splash-subtitle { color: var(--text-muted); font-size: 0.85rem; margin-top: 6px; }
+    flex-direction:column;
 
-.progress-track {
-    width: 220px;
-    height: 5px;
-    background: #374151;
-    border-radius: 99px;
-    margin-top: 28px;
-    overflow: hidden;
-}
-#loading-progress {
-    width: 0%;
-    height: 100%;
-    background: var(--primary);
-    transition: width 0.3s linear;
+    align-items:center;
+
+    gap:12px;
+
 }
 
-/* =======================================================
-   Application Frame and Workspace Structure
-   ======================================================= */
-#main-app {
-    width: 100%;
-    max-width: var(--max-content-width);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--surface);
-    position: relative;
-    padding-bottom: var(--nav-height);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+.logo-area img{
+
+    width:130px;
+
+    height:130px;
+
+    object-fit:contain;
+
 }
 
-.app-header {
-    height: 64px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    z-index: 10;
+.logo-area h1{
+
+    font-size:2rem;
+
+    font-weight:700;
+
 }
 
-.header-branding {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.logo-area p{
+
+    color:var(--text-muted);
+
 }
 
-.app-header h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+/* ==========================
+   Splash Loading Bar
+========================== */
+
+.loading-bar{
+
+    width:280px;
+
+    height:8px;
+
+    background:#1e293b;
+
+    border-radius:999px;
+
+    overflow:hidden;
+
 }
 
-.header-actions {
-    display: flex;
-    gap: 8px;
-}
+#loading-progress{
 
-.icon-btn {
-    background: transparent;
-    border: none;
-    font-size: 1.25rem;
-    padding: 6px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-.icon-btn:hover {
-    background-color: var(--surface-active);
-}
+    width:0%;
 
-.workspace-container {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    flex-grow: 1;
-}
+    height:100%;
 
-/* =======================================================
-   Metadata Counter Metric Row Style
-   ======================================================= */
-.metrics-summary-strip {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2px 4px;
-}
+    background:var(--primary);
 
-.metric-pill-inline {
-    font-size: 0.95rem;
-    font-weight: 600;
-}
+    transition:width .3s linear;
 
-.metric-pill-inline .lbl {
-    color: var(--text-muted);
-}
-
-.metric-pill-inline .val {
-    color: var(--text);
-    margin-left: 4px;
 }
 
 /* =======================================================
-   3D Viewport Presentation Layout
-   ======================================================= */
-.viewport-panel {
-    width: 100%;
+   Header
+======================================================= */
+
+header{
+
+    height:var(--header-height);
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 24px;
+
+    background:var(--surface);
+
+    border-bottom:1px solid var(--border);
+
+    position:sticky;
+
+    top:0;
+
+    z-index:100;
+
 }
 
-.canvas-card {
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    background: var(--surface-card);
-    backdrop-filter: var(--glass-blur);
-    padding: 12px;
-    position: relative;
-    box-shadow: var(--shadow);
+header h2{
+
+    font-size:1.5rem;
+
+    font-weight:700;
+
 }
 
-.card-header-badge {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    background: rgba(0, 0, 0, 0.4);
-    padding: 4px 10px;
-    border-radius: 99px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    z-index: 5;
-    pointer-events: none;
+header .right{
+
+    display:flex;
+
+    gap:12px;
+
 }
 
-.pulse-indicator {
-    width: 6px;
-    height: 6px;
-    background-color: var(--primary);
-    border-radius: 50%;
-    display: inline-block;
+header button{
+
+    background:var(--surface-2);
+
+    color:var(--text);
+
+    padding:10px 16px;
+
+    border-radius:12px;
+
+    font-size:.95rem;
+
 }
 
-#viewer {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    background: #040711;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-}
+header button:hover{
 
-/* =======================================================
-   Dynamic Center Operations Context Pane
-   ======================================================= */
-.controls-sidebar-pane {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
+    background:var(--primary);
 
-/* Full Width Primary Form Action trigger */
-.validate-action-button-full {
-    width: 100%;
-    padding: 15px;
-    font-family: inherit;
-    font-size: 1rem;
-    font-weight: 700;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-    background-color: var(--surface-card);
-    color: var(--text);
-    cursor: pointer;
-    box-shadow: var(--shadow);
-    transition: background-color 0.2s, transform 0.1s;
-}
-
-.validate-action-button-full:not(:disabled):hover {
-    background-color: var(--surface-active);
-}
-
-.validate-action-button-full:active {
-    transform: scale(0.99);
-}
-
-.validate-action-button-full:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
 }
 
 /* =======================================================
-   Color Picker Horizontal Sequence Palette Architecture
-   ======================================================= */
-.palette-card {
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-    background: var(--surface-card);
-    backdrop-filter: var(--glass-blur);
-    padding: 16px;
-    box-shadow: var(--shadow);
-}
+   Editor Layout
+======================================================= */
 
-.card-section-title h4 {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.75px;
-    margin-bottom: 12px;
-}
+.editor-layout{
 
-.color-picker-grid {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    gap: 6px;
-}
+    display:grid;
 
-.color-picker-grid .color-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 4px 0;
-    margin: 0;
-    outline: none;
-    gap: 8px;
-    flex: 1;
-    transition: transform 0.2s;
-}
+    grid-template-columns:2fr 1fr;
 
-.color-picker-grid .swatch {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    border: 2px solid transparent;
-    transition: transform 0.2s, border-color 0.2s;
-}
+    gap:24px;
 
-.color-picker-grid .color-btn:hover .swatch {
-    transform: scale(1.08);
-}
+    padding:24px;
 
-.color-picker-grid .color-btn.active .swatch {
-    border-color: var(--primary);
-    transform: scale(1.15);
-}
-
-/* Dynamic Class Swatch Configurations Mapping overrides */
-.white .swatch  { background-color: #ffffff; border: 1px solid #d1d5db !important; }
-.green .swatch  { background-color: #22c55e; }
-.red .swatch    { background-color: #ef4444; }
-.blue .swatch   { background-color: #3b82f6; }
-.orange .swatch { background-color: #f97316; }
-.yellow .swatch { background-color: #eab308; }
-
-/* Suppress color label text strings completely for row compactness */
-.color-picker-grid .color-name {
-    display: none !important;
-}
-
-.color-picker-grid .count-tag {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-muted);
-}
-
-.color-picker-grid .color-btn.active .count-tag {
-    color: var(--primary);
-    font-weight: 700;
 }
 
 /* =======================================================
-   Solution Execution Output Frame
-   ======================================================= */
-.output-results-panel {
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-    background: var(--surface-card);
-    padding: 16px;
-    box-shadow: var(--shadow);
+   Panels
+======================================================= */
+
+.left-panel,
+.right-panel{
+
+    background:var(--surface);
+
+    border-radius:var(--radius);
+
+    padding:20px;
+
+    box-shadow:var(--shadow);
+
 }
 
-.panel-section-header h4 {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-}
+.left-panel h3,
+.right-panel h3{
 
-.metrics-dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-bottom: 14px;
-}
+    margin-bottom:18px;
 
-.stat-box {
-    background: rgba(0, 0, 0, 0.15);
-    padding: 10px;
-    border-radius: var(--radius-sm);
-    text-align: center;
-    border: 1px solid var(--border);
-}
+    font-size:1.2rem;
 
-.stat-value {
-    display: block;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--primary);
-}
-
-.stat-label {
-    font-size: 0.65rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-}
-
-.algorithm-readout-container {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.readout-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-muted);
-}
-
-.algorithm-string {
-    font-family: monospace;
-    font-size: 0.95rem;
-    letter-spacing: 0.5px;
-    color: var(--success);
-    background: rgba(34, 197, 94, 0.08);
-    padding: 12px;
-    border-radius: var(--radius-sm);
-    text-align: center;
-    border: 1px solid rgba(34, 197, 94, 0.2);
-}
-
-.spinner-loader {
-    width: 28px;
-    height: 28px;
-    border: 3px solid var(--border);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    animation: systemSpin 0.8s linear infinite;
-    margin: 8px auto;
-}
-@keyframes systemSpin { to { transform: rotate(360deg); } }
-
-/* =======================================================
-   Sticky Bottom Navigation Dock Setup
-   ======================================================= */
-.app-bottom-navigation-bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: var(--nav-height);
-    background-color: var(--surface);
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 16px;
-    z-index: 90;
-}
-
-.nav-btn {
-    padding: 12px 24px;
-    font-family: inherit;
-    font-size: 0.95rem;
-    font-weight: 600;
-    border-radius: var(--radius-sm);
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-.prev-step-btn {
-    background-color: transparent;
-    color: var(--text-muted);
-}
-
-.prev-step-btn:hover {
-    color: var(--text);
-    background-color: var(--surface-active);
-}
-
-.nav-right-slot-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 150px;
-    height: 100%;
-}
-
-/* Next and Solve button stack overlap setup to preserve runtime visibility changes exactly */
-.next-step-btn,
-.execute-solve-btn {
-    position: absolute;
-    right: 0;
-    white-space: nowrap;
-}
-
-.next-step-btn {
-    background-color: var(--primary);
-    color: #ffffff;
-    z-index: 5;
-}
-.next-step-btn:hover {
-    background-color: var(--primary-hover);
-}
-
-.next-step-btn[style*="display: none"],
-.next-step-btn[style*="display:none"] {
-    display: none !important;
-}
-
-.execute-solve-btn {
-    background-color: var(--success);
-    color: #ffffff;
-    z-index: 4;
-}
-.execute-solve-btn:not(:disabled):hover {
-    background-color: var(--success-hover);
-}
-.execute-solve-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
 }
 
 /* =======================================================
-   System Notification Toast Node Interface
-   ======================================================= */
-.toast-notification-node {
-    position: fixed;
-    bottom: calc(var(--nav-height) + 16px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1f2937;
-    color: #ffffff;
-    padding: 12px 24px;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    z-index: 1000;
-    border: 1px solid var(--border);
+   Three.js Viewer
+======================================================= */
+
+#viewer{
+
+    width:100%;
+
+    height:520px;
+
+    background:#020617;
+
+    border:2px solid var(--border);
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    position:relative;
+
 }
 
-.toast-notification-node.show {
-    opacity: 1;
+/* =======================================================
+   Progress
+======================================================= */
+
+.progress-box{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:18px;
+
+    margin-bottom:10px;
+
+    font-weight:600;
+
+}
+
+#face-progress{
+
+    width:100%;
+
+    height:12px;
+
+    appearance:none;
+
+}
+
+#face-progress::-webkit-progress-bar{
+
+    background:#1e293b;
+
+    border-radius:999px;
+
+}
+
+#face-progress::-webkit-progress-value{
+
+    background:var(--primary);
+
+    border-radius:999px;
+
+}
+
+/* =======================================================
+   Color Picker
+======================================================= */
+
+#color-picker{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+.color-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:15px;
+
+}
+
+.color-btn{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:12px;
+
+    padding:14px;
+
+    border-radius:14px;
+
+    background:var(--surface-2);
+
+    color:var(--text);
+
+    border:2px solid transparent;
+
+    transition:var(--transition);
+
+}
+
+.color-btn:hover{
+
+    transform:translateY(-2px);
+
+    border-color:var(--primary);
+
+}
+
+.color-circle{
+
+    width:24px;
+
+    height:24px;
+
+    border-radius:50%;
+
+    border:2px solid #fff;
+
+}
+
+/* ==========================
+   Sticker Colors
+========================== */
+
+.white .color-circle{
+
+    background:#ffffff;
+
+}
+
+.yellow .color-circle{
+    background:#ffd600;
+}
+
+
+/* =======================================================
+   Loading Page
+======================================================= */
+
+#loading-page{
+
+    position:fixed;
+
+    inset:0;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#020617;
+
+    z-index:9998;
+
+}
+
+.loading-container{
+
+    width:min(420px,90%);
+
+    background:var(--surface);
+
+    padding:32px;
+
+    border-radius:20px;
+
+    text-align:center;
+
+    box-shadow:var(--shadow);
+
+}
+
+.loading-container h2{
+
+    margin-bottom:20px;
+
+}
+
+.loading-spinner{
+
+    width:70px;
+
+    height:70px;
+
+    margin:20px auto;
+
+    border:6px solid var(--surface-2);
+
+    border-top:6px solid var(--primary);
+
+    border-radius:50%;
+
+    animation:spin 1s linear infinite;
+
+}
+
+#loading-status{
+
+    margin-bottom:20px;
+
+    color:var(--text-muted);
+
+}
+
+.loading-progress{
+
+    width:100%;
+
+    height:12px;
+
+    background:var(--surface-2);
+
+    border-radius:999px;
+
+    overflow:hidden;
+
+}
+
+#loading-fill{
+
+    width:0%;
+
+    height:100%;
+
+    background:var(--success);
+
+    transition:width .3s ease;
+
+}
+
+/* =======================================================
+   Solver Layout
+======================================================= */
+
+.solver-layout{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:24px;
+
+    padding:24px;
+
+}
+
+.solver-left,
+.solver-right{
+
+    background:var(--surface);
+
+    border-radius:var(--radius);
+
+    padding:20px;
+
+    box-shadow:var(--shadow);
+
+}
+
+#solver-viewer{
+
+    width:100%;
+
+    height:520px;
+
+    margin-top:15px;
+
+    border-radius:18px;
+
+    border:2px solid var(--border);
+
+    background:#020617;
+
+    overflow:hidden;
+
+}
+
+/* =======================================================
+   Current Move
+======================================================= */
+
+#current-move{
+
+    text-align:center;
+
+    font-size:4rem;
+
+    color:var(--primary);
+
+    margin:20px 0;
+
+}
+
+#move-counter{
+
+    text-align:center;
+
+    color:var(--text-muted);
+
+    margin-bottom:20px;
+
+}
+
+/* =======================================================
+   Player Controls
+======================================================= */
+
+.player-controls{
+}
+
+/* =======================================================
+   Dark / Light Theme
+======================================================= */
+
+body.light{
+
+    --bg:#f1f5f9;
+    --surface:#ffffff;
+    --surface-2:#e2e8f0;
+
+    --text:#0f172a;
+    --text-muted:#475569;
+
+    --border:#cbd5e1;
+
+}
+
+/* =======================================================
+   Scrollbar
+======================================================= */
+
+::-webkit-scrollbar{
+
+    width:10px;
+    height:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:var(--surface);
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:var(--primary);
+
+    border-radius:999px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#2563eb;
+
+}
+
+/* =======================================================
+   Selection
+======================================================= */
+
+::selection{
+
+    background:var(--primary);
+
+    color:#fff;
+
+}
+
+/* =======================================================
+   Links
+======================================================= */
+
+a{
+
+    color:var(--primary);
+
+    text-decoration:none;
+
+    transition:var(--transition);
+
+}
+
+a:hover{
+
+    text-decoration:underline;
+
+}
+
+/* =======================================================
+   Focus Accessibility
+======================================================= */
+
+button:focus-visible,
+select:focus-visible{
+
+    outline:3px solid var(--primary);
+
+    outline-offset:3px;
+
+}
+
+/* =======================================================
+   Disabled
+======================================================= */
+
+button:disabled{
+
+    opacity:.65;
+
+}
+
+/* =======================================================
+   Utility Classes
+======================================================= */
+
+.text-center{
+
+    text-align:center;
+
+}
+
+.flex{
+
+    display:flex;
+
+}
+
+.flex-column{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.justify-between{
+
+    justify-content:space-between;
+
+}
+
+.align-center{
+
+    align-items:center;
+
+}
+
+.w-100{
+
+    width:100%;
+
+}
+
+.mt-10{
+
+    margin-top:10px;
+
+}
+
+.mt-20{
+
+    margin-top:20px;
+
+}
+
+.mt-30{
+
+    margin-top:30px;
+
+}
+
+.mb-10{
+
+    margin-bottom:10px;
+
+}
+
+.mb-20{
+
+    margin-bottom:20px;
+
+}
+
+.hidden{
+
+    display:none !important;
+
+}
+
+/* =======================================================
+   Smooth Animation
+======================================================= */
+
+*{
+
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+
+}
+
+/* =======================================================
+   End of File
+======================================================= */
+
+/* ==========================================
+   Compact Color Picker
+========================================== */
+
+.compact-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin:20px 0;
+}
+
+.color-btn{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    padding:14px;
+
+    border:none;
+    border-radius:18px;
+
+    background:#263246;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.color-btn:hover{
+    transform:translateY(-2px);
+}
+
+.color-btn.active{
+    border:3px solid #00d4ff;
+    box-shadow:0 0 18px #00d4ff66;
+}
+
+.color-circle{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:3px solid #ffffff;
+}
+
+.white .color-circle{
+    background:#ffffff;
+}
+
+.yellow .color-circle{
+    background:#ffd500;
+}
+
+.red .color-circle{
+    background:#ff2a2a;
+}
+
+.orange .color-circle{
+    background:#ff8800;
+}
+
+.blue .color-circle{
+    background:#005eff;
+}
+
+.green .color-circle{
+    background:#00b140;
+}
+
+.color-count{
+    margin-top:10px;
+    font-size:15px;
+    font-weight:700;
+    color:#fff;
 }
