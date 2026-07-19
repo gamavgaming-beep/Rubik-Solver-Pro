@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import CubeEngine from "./cube-engine.js";
 
 /* ==========================================
    Rubik Solver Pro
@@ -554,6 +555,9 @@ function getStickerIndex(cubie, faceLetter) {
 ========================================== */
 
 const viewer = document.getElementById("viewer");
+
+const cubeEngine = new CubeEngine();
+cubeEngine.initialize(viewer);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x101826);
