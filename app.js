@@ -693,6 +693,10 @@ rubiksCube.add(cubie);
 
 scene.add(rubiksCube);
 
+const stickers = [];
+
+const stickerSize = 0.82;
+
 let rotationX = 0;
 let rotationY = 0;
 
@@ -813,6 +817,21 @@ cubie.material[faceIndex].color.setHex(
 );
 
 const faceLetter = ["R","L","U","D","F","B"][faceIndex];
+
+const x = cubie.userData.x;
+const y = cubie.userData.y;
+const z = cubie.userData.z;
+
+if (
+    (faceLetter === "R" && x !== 1) ||
+    (faceLetter === "L" && x !== -1) ||
+    (faceLetter === "U" && y !== 1) ||
+    (faceLetter === "D" && y !== -1) ||
+    (faceLetter === "F" && z !== 1) ||
+    (faceLetter === "B" && z !== -1)
+) {
+    return;
+}
 
 const stickerIndex = getStickerIndex(cubie, faceLetter);
 
