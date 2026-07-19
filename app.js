@@ -668,6 +668,11 @@ for (let x = -1; x <= 1; x++) {
     z * (cubieSize + gap)
 );
 
+const isCenterCubie =
+    x === 0 &&
+    y === 0 &&
+    z === 0;
+
 cubie.userData = {
     x,
     y,
