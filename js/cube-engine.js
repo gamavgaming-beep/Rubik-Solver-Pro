@@ -141,11 +141,48 @@ constructor(options = {}) {
         faster: 120  
     };  
     this.turnSpeed = this.speed.fast;  
+    
+    // --------------------------------------------------
+// Rotation Configuration
+// --------------------------------------------------
+
+this.faceAxis = {
+    U: "y",
+    D: "y",
+    L: "x",
+    R: "x",
+    F: "z",
+    B: "z"
+};
+
+this.faceLayer = {
+    U: 1,
+    D: -1,
+    L: -1,
+    R: 1,
+    F: 1,
+    B: -1
+};
+
+this.faceDirection = {
+    U: 1,
+    D: -1,
+    L: -1,
+    R: 1,
+    F: 1,
+    B: -1
+};
+
+this.activeColor = null;
 
     // --------------------------------------------------  
     // Execution Performance Bindings  
     // --------------------------------------------------  
     this.resizeHandler = this.onResize.bind(this);  
+    
+    this.pointerDownHandler = this.onPointerDown.bind(this);
+this.pointerMoveHandler = this.onPointerMove.bind(this);
+this.pointerUpHandler = this.onPointerUp.bind(this);
 
     // Options Override Custom Configurations  
     Object.assign(this, options);  
@@ -221,6 +258,10 @@ initialize(container) {
     // Event Listeners Registration  
     // -----------------------------------------  
     window.addEventListener("resize", this.resizeHandler);  
+
+this.canvas.addEventListener("pointerdown", this.pointerDownHandler);
+this.canvas.addEventListener("pointermove", this.pointerMoveHandler);
+this.canvas.addEventListener("pointerup", this.pointerUpHandler);
 
     // -----------------------------------------  
     // Execution Lifecycle Start  
@@ -305,6 +346,10 @@ update() {
 dispose() {  
     cancelAnimationFrame(this.animationId);  
     window.removeEventListener("resize", this.resizeHandler);  
+    
+    this.canvas?.removeEventListener("pointerdown", this.onPointerDown);
+this.canvas?.removeEventListener("pointermove", this.onPointerMove);
+this.canvas?.removeEventListener("pointerup", this.onPointerUp);
 
     if (this.renderer) {  
         this.renderer.dispose();  
@@ -319,8 +364,6 @@ dispose() {
     this.stickers = [];  
     this.moveQueue = [];  
     this.currentMove = null;  
-}
-
 }
 
 // =====================================================  
@@ -846,5 +889,7 @@ return this.stickers.filter(s => s.userData && s.userData.currentFace === faceCo
 getTotalStickersCompletedCount() {
 // கியூப் முழுவதும் நிரப்பப்பட்டுள்ள மொத்த ஸ்டிக்கர்களின் எண்ணிக்கையைத் தரும் (Max 54)
 return this.stickers.filter(s => s.userData && s.userData.color).length;
+
 }
 
+                    }
