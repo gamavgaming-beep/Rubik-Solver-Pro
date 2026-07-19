@@ -672,6 +672,10 @@ const isCenterCubie =
     x === 0 &&
     y === 0 &&
     z === 0;
+    
+    if (isCenterCubie) {
+    console.log("Center Cubie Created");
+}
 
 cubie.userData = {
     x,
