@@ -879,10 +879,19 @@ button:disabled{
 ========================================== */
 
 .compact-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:16px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:10px;
+
     margin:20px 0;
+
+    flex-wrap:nowrap;
+
 }
 
 .color-btn{
