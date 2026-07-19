@@ -880,17 +880,13 @@ button:disabled{
 
 .compact-grid{
 
-    display:flex;
+    display:grid;
 
-    justify-content:space-between;
+    grid-template-columns:repeat(3,1fr);
 
-    align-items:flex-start;
-
-    gap:10px;
+    gap:12px;
 
     margin:20px 0;
-
-    flex-wrap:nowrap;
 
 }
 
