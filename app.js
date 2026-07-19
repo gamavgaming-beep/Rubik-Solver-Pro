@@ -740,6 +740,35 @@ nextFaceBtn.addEventListener("click", () => {
     updateFaceCounter();
 
 });
+
+previousFaceBtn.addEventListener("click", () => {
+
+    if (appState.currentFace <= 0) {
+        return;
+    }
+
+    appState.currentFace--;
+
+    const direction = rotationSequence[appState.currentFace];
+
+    switch (direction) {
+
+        case "right":
+            rotationY += Math.PI / 2;
+            break;
+
+        case "up":
+            rotationX += Math.PI / 2;
+            break;
+
+    }
+
+    rubiksCube.rotation.x = rotationX;
+    rubiksCube.rotation.y = rotationY;
+
+    updateFaceCounter();
+
+});
 /* ==========================================
    Raycaster
 ========================================== */
