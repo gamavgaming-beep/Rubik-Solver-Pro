@@ -162,7 +162,7 @@ Install
 
 <h3>
 
-3D Cube
+3D Cube Editor
 
 </h3>
 
@@ -174,25 +174,38 @@ Install
 
 <div class="progress-box">
 
-<span>
+    <div class="face-info">
 
-Face
+        <span class="label">
 
-</span>
+            Cube Face
 
-<span id="face-counter">
+        </span>
 
-1 / 6
+        <span id="face-counter">
 
-</span>
+            1 / 6
+
+        </span>
+
+    </div>
+
+    <div class="filled-info">
+
+        <span id="filled-count">
+
+            0 / 54
+
+        </span>
+
+    </div>
 
 </div>
 
 <progress
-value="1"
-max="6"
-id="face-progress">
-
+    id="face-progress"
+    value="1"
+    max="6">
 </progress>
 
 </div>
@@ -296,15 +309,16 @@ Filled Stickers
 
 <button id="validate-btn">
 
-✅ Validate Cube
+Validate Face
 
 </button>
 
 <button
 id="solve-btn"
-disabled>
+disabled
+class="hidden">
 
-🚀 Solve Cube
+Solve Cube
 
 </button>
 
