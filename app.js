@@ -847,6 +847,12 @@ function animate() {
 
 animate();
 
+async function solveCube(cubeState) {
+
+    console.log("Cube solving started...");
+
+}
+
 /* ==========================================
    Window Resize
 ========================================== */
@@ -868,5 +874,4 @@ window.addEventListener(
 
     }
 );
-
 
