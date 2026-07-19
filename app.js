@@ -696,22 +696,22 @@ scene.add(rubiksCube);
 let rotationX = 0;
 let rotationY = 0;
 
+let targetRotationX = 0;
+let targetRotationY = 0;
+
 function rotateCube(direction) {
 
     switch (direction) {
 
         case "right":
-            rotationY -= Math.PI / 2;
+            targetRotationY -= Math.PI / 2;
             break;
 
         case "up":
-            rotationX -= Math.PI / 2;
+            targetRotationX -= Math.PI / 2;
             break;
 
     }
-
-    rubiksCube.rotation.x = rotationX;
-    rubiksCube.rotation.y = rotationY;
 
 }
 
@@ -741,7 +741,8 @@ nextFaceBtn.addEventListener("click", () => {
 
 });
 
-previousFaceBtn.addEventListener("click", () => {
+ 
+     previousFaceBtn.addEventListener("click", () => {
 
     if (appState.currentFace <= 0) {
         return;
@@ -750,21 +751,18 @@ previousFaceBtn.addEventListener("click", () => {
     appState.currentFace--;
 
     const direction = rotationSequence[appState.currentFace];
-
+    
     switch (direction) {
 
         case "right":
-            rotationY += Math.PI / 2;
+            targetRotationY += Math.PI / 2;
             break;
 
         case "up":
-            rotationX += Math.PI / 2;
+            targetRotationX += Math.PI / 2;
             break;
 
     }
-
-    rubiksCube.rotation.x = rotationX;
-    rubiksCube.rotation.y = rotationY;
 
     updateFaceCounter();
 
@@ -837,10 +835,13 @@ function animate() {
 
     requestAnimationFrame(animate);
 
-    renderer.render(
-        scene,
-        camera
-    );
+    rotationX += (targetRotationX - rotationX) * 0.12;
+    rotationY += (targetRotationY - rotationY) * 0.12;
+
+    rubiksCube.rotation.x = rotationX;
+    rubiksCube.rotation.y = rotationY;
+
+    renderer.render(scene, camera);
 
 }
 
@@ -867,4 +868,5 @@ window.addEventListener(
 
     }
 );
+
 
