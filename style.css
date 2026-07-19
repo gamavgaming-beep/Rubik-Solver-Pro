@@ -886,21 +886,29 @@ button:disabled{
 }
 
 .color-btn{
+
+    flex:1;
+
     display:flex;
+
     flex-direction:column;
+
     align-items:center;
+
     justify-content:center;
 
-    padding:14px;
+    padding:10px;
 
     border:none;
-    border-radius:18px;
+
+    border-radius:16px;
 
     background:#263246;
 
     cursor:pointer;
 
     transition:.25s;
+
 }
 
 .color-btn:hover{
