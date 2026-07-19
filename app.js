@@ -327,6 +327,12 @@ document.getElementById("validate-btn");
 const solveBtn =
 document.getElementById("solve-btn");
 
+const previousFaceBtn =
+document.getElementById("previous-face");
+
+const nextFaceBtn =
+document.getElementById("next-face");
+
 /* ==========================================
    Face Counter
 ========================================== */
@@ -687,6 +693,53 @@ rubiksCube.add(cubie);
 
 scene.add(rubiksCube);
 
+let rotationX = 0;
+let rotationY = 0;
+
+function rotateCube(direction) {
+
+    switch (direction) {
+
+        case "right":
+            rotationY -= Math.PI / 2;
+            break;
+
+        case "up":
+            rotationX -= Math.PI / 2;
+            break;
+
+    }
+
+    rubiksCube.rotation.x = rotationX;
+    rubiksCube.rotation.y = rotationY;
+
+}
+
+const rotationSequence = [
+    "right",
+    "up",
+    "right",
+    "right",
+    "up"
+];
+
+nextFaceBtn.addEventListener("click", () => {
+
+    if (appState.currentFace >= appState.totalFaces - 1) {
+        return;
+    }
+
+    const direction = rotationSequence[appState.currentFace];
+
+    if (direction) {
+        rotateCube(direction);
+    }
+
+    appState.currentFace++;
+
+    updateFaceCounter();
+
+});
 /* ==========================================
    Raycaster
 ========================================== */
