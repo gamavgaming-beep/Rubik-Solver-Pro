@@ -17,5 +17,72 @@ export class CubeRotation {
         this.rotationSpeed = 0.12;
 
     }
+    
+rotate(direction) {
+
+    if (this.animating) return;
+
+    this.animating = true;
+
+    const axis = new THREE.Vector3();
+
+    switch (direction) {
+
+        case "right":
+            axis.set(0, 1, 0);
+            break;
+
+        case "up":
+            axis.set(1, 0, 0);
+            break;
+
+        default:
+            this.animating = false;
+            return;
+
+    }
+
+    axis.applyQuaternion(this.cube.quaternion);
+
+    const rotation = new THREE.Quaternion();
+
+    rotation.setFromAxisAngle(axis, this.rotationAngle);
+
+    this.targetQuaternion.copy(this.cube.quaternion);
+
+    this.targetQuaternion.multiply(rotation);
+
+}
+
+update() {
+
+    if (!this.animating) return;
+
+    this.cube.quaternion.slerp(
+        this.targetQuaternion,
+        this.rotationSpeed
+    );
+
+    if (
+        this.cube.quaternion.angleTo(
+            this.targetQuaternion
+        ) < 0.01
+    ) {
+
+        this.cube.quaternion.copy(
+            this.targetQuaternion
+        );
+
+        this.animating = false;
+
+    }
+
+}
+
+isAnimating() {
+
+    return this.animating;
+
+}
 
 }
