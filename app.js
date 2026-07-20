@@ -835,6 +835,17 @@ const faceRotations = [
     "up"
 ];
 
+function debugRotation(move) {
+    console.log(
+        "Face:",
+        appState.currentFace,
+        "Move:",
+        move,
+        "Quaternion:",
+        rubiksCube.quaternion.toArray()
+    );
+}
+
 function showCurrentFace() {
     updateFaceCounter();
 }
@@ -850,8 +861,9 @@ nextFaceBtn.addEventListener("click", () => {
     const move = faceRotations[appState.currentFace];
 
     if (move) {
-        cubeRotation.rotate(move);
-    }
+    debugRotation(move);
+    cubeRotation.rotate(move);
+}
 
     showCurrentFace();
 
