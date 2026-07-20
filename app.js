@@ -713,11 +713,33 @@ const stickers = [];
 
 const stickerSize = 0.82;
 
-let rotationX = 0;
-let rotationY = 0;
+/* ==========================================
+   Cube Orientation
+========================================== */
+
+const FACE_ROTATIONS = [
+
+    { x: 0, y: 0 },                 // Front
+
+    { x: 0, y: -Math.PI / 2 },      // Right
+
+    { x: Math.PI / 2, y: -Math.PI / 2 }, // Up
+
+    { x: Math.PI / 2, y: Math.PI / 2 },  // Left
+
+    { x: Math.PI / 2, y: Math.PI },      // Back
+
+    { x: Math.PI, y: Math.PI }      // Down
+
+];
+
+let currentRotationX = 0;
+let currentRotationY = 0;
 
 let targetRotationX = 0;
 let targetRotationY = 0;
+
+let cubeAnimating = false;
 
 function rotateCube(direction) {
 
@@ -882,11 +904,14 @@ function animate() {
 
     requestAnimationFrame(animate);
 
-    rotationX += (targetRotationX - rotationX) * 0.12;
-    rotationY += (targetRotationY - rotationY) * 0.12;
+    currentRotationX +=
+        (targetRotationX - currentRotationX) * 0.12;
 
-    rubiksCube.rotation.x = rotationX;
-    rubiksCube.rotation.y = rotationY;
+    currentRotationY +=
+        (targetRotationY - currentRotationY) * 0.12;
+
+    rubiksCube.rotation.x = currentRotationX;
+    rubiksCube.rotation.y = currentRotationY;
 
     renderer.render(scene, camera);
 
@@ -921,5 +946,6 @@ window.addEventListener(
 
     }
 );
+
 
 
