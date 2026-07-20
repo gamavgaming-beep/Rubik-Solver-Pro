@@ -2,8 +2,6 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import CubeEngine from "./js/cube-engine.js";
 
-window.onerror = function (message, source, line) {
-    alert("ERROR:\n" + message + "\nLine: " + line);
 };
 
 /* ==========================================
@@ -82,9 +80,7 @@ async function startSplash() {
 
     }
 
-    splashScreen.classList.add("hidden");
-
-alert("Splash finished");
+splashScreen.classList.add("hidden");
 
 mainApp.classList.remove("hidden");
 
