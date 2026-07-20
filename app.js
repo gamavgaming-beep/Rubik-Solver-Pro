@@ -826,7 +826,8 @@ function animate() {
 
 animate();
 
-const rotationSequence = [
+const faceRotations = [
+    null,
     "right",
     "up",
     "right",
@@ -835,23 +836,7 @@ const rotationSequence = [
 ];
 
 function showCurrentFace() {
-
     updateFaceCounter();
-
-}
-
-function rotateBack(direction) {
-
-    if (direction === "right") {
-
-        cubeRotation.rotate("left");
-
-    } else if (direction === "up") {
-
-        cubeRotation.rotate("down");
-
-    }
-
 }
 
 nextFaceBtn.addEventListener("click", () => {
@@ -860,11 +845,13 @@ nextFaceBtn.addEventListener("click", () => {
 
     if (appState.currentFace >= 5) return;
 
-    cubeRotation.rotate(
-        rotationSequence[appState.currentFace]
-    );
-
     appState.currentFace++;
+
+    const move = faceRotations[appState.currentFace];
+
+    if (move) {
+        cubeRotation.rotate(move);
+    }
 
     showCurrentFace();
 
@@ -876,9 +863,15 @@ previousFaceBtn.addEventListener("click", () => {
 
     if (appState.currentFace <= 0) return;
 
+    const move = faceRotations[appState.currentFace];
+
+    if (move === "right") {
+        cubeRotation.rotate("left");
+    } else if (move === "up") {
+        cubeRotation.rotate("down");
+    }
+
     appState.currentFace--;
-    
-    rotateBack(rotationSequence[appState.currentFace]);
 
     showCurrentFace();
 
@@ -911,6 +904,5 @@ window.addEventListener(
 
     }
 );
-
 
 
