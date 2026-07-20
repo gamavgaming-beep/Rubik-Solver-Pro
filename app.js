@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import CubeEngine from "./cube-engine.js";
+import CubeEngine from "./js/cube-engine.js";
 
 window.onerror = function (message, source, line) {
     alert("ERROR:\n" + message + "\nLine: " + line);
