@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import CubeEngine from "./js/cube-engine.js";
-
+import { CubeRotation } from "./js/cube-rotation.js";
 /* ==========================================
    Rubik Solver Pro
    App Initialization
@@ -709,6 +709,8 @@ scene.add(rubiksCube);
 
 rubiksCube.position.set(0, 0, 0);
 
+const cubeRotation = new CubeRotation(rubiksCube);
+
 const stickers = [];
 
 const stickerSize = 0.82;
@@ -717,80 +719,8 @@ const stickerSize = 0.82;
    Cube Orientation
 ========================================== */
 
-const FACE_ROTATIONS = [
 
-    { x: 0, y: 0 },                 // Front
 
-    { x: 0, y: -Math.PI / 2 },      // Right
-
-    { x: Math.PI / 2, y: -Math.PI / 2 }, // Up
-
-    { x: Math.PI / 2, y: Math.PI / 2 },  // Left
-
-    { x: Math.PI / 2, y: Math.PI },      // Back
-
-    { x: Math.PI, y: Math.PI }      // Down
-
-];
-
-let currentRotationX = 0;
-let currentRotationY = 0;
-
-let targetRotationX = 0;
-let targetRotationY = 0;
-
-let cubeAnimating = false;
-
-function rotateCube(faceIndex) {
-
-    if (cubeAnimating) return;
-
-    cubeAnimating = true;
-
-    targetRotationX = FACE_ROTATIONS[faceIndex].x;
-    targetRotationY = FACE_ROTATIONS[faceIndex].y;
-
-}
-
-const rotationSequence = [
-    1,
-    2,
-    3,
-    4,
-    5
-];
-
-nextFaceBtn.addEventListener("click", () => {
-
-    if (appState.currentFace >= appState.totalFaces - 1) {
-        return;
-    }
-
-    const direction = rotationSequence[appState.currentFace];
-
-    if (direction) {
-        rotateCube(direction);
-    }
-
-    appState.currentFace++;
-
-    updateFaceCounter();
-
-});
-
-previousFaceBtn.addEventListener("click", () => {
-
-    if (appState.currentFace <= 0) {
-        return;
-    }
-
-    appState.currentFace--;
-
-    rotateCube(appState.currentFace);
-
-    updateFaceCounter();
-
-});
 
 /* ==========================================
    Raycaster
@@ -887,27 +817,34 @@ function animate() {
 
     requestAnimationFrame(animate);
 
-    currentRotationX +=
-        (targetRotationX - currentRotationX) * 0.12;
-
-    currentRotationY +=
-        (targetRotationY - currentRotationY) * 0.12;
-
-    rubiksCube.rotation.x = currentRotationX;
-    rubiksCube.rotation.y = currentRotationY;
-    
-    if (
-    Math.abs(targetRotationX - currentRotationX) < 0.01 &&
-    Math.abs(targetRotationY - currentRotationY) < 0.01
-) {
-    cubeAnimating = false;
-}
+    cubeRotation.update();
 
     renderer.render(scene, camera);
 
 }
 
+
 animate();
+
+nextFaceBtn.addEventListener("click", () => {
+
+    if (!cubeRotation.isAnimating()) {
+
+        cubeRotation.rotate("right");
+
+    }
+
+});
+
+previousFaceBtn.addEventListener("click", () => {
+
+    if (!cubeRotation.isAnimating()) {
+
+        cubeRotation.rotate("up");
+
+    }
+
+});
 
 async function solveCube(cubeState) {
 
