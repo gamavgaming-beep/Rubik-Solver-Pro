@@ -741,28 +741,23 @@ let targetRotationY = 0;
 
 let cubeAnimating = false;
 
-function rotateCube(direction) {
+function rotateCube(faceIndex) {
 
-    switch (direction) {
+    if (cubeAnimating) return;
 
-        case "right":
-            targetRotationY -= Math.PI / 2;
-            break;
+    cubeAnimating = true;
 
-        case "up":
-            targetRotationX -= Math.PI / 2;
-            break;
-
-    }
+    targetRotationX = FACE_ROTATIONS[faceIndex].x;
+    targetRotationY = FACE_ROTATIONS[faceIndex].y;
 
 }
 
 const rotationSequence = [
-    "right",
-    "up",
-    "right",
-    "right",
-    "up"
+    1,
+    2,
+    3,
+    4,
+    5
 ];
 
 nextFaceBtn.addEventListener("click", () => {
@@ -783,8 +778,7 @@ nextFaceBtn.addEventListener("click", () => {
 
 });
 
- 
-     previousFaceBtn.addEventListener("click", () => {
+previousFaceBtn.addEventListener("click", () => {
 
     if (appState.currentFace <= 0) {
         return;
@@ -792,23 +786,12 @@ nextFaceBtn.addEventListener("click", () => {
 
     appState.currentFace--;
 
-    const direction = rotationSequence[appState.currentFace];
-    
-    switch (direction) {
-
-        case "right":
-            targetRotationY += Math.PI / 2;
-            break;
-
-        case "up":
-            targetRotationX += Math.PI / 2;
-            break;
-
-    }
+    rotateCube(appState.currentFace);
 
     updateFaceCounter();
 
 });
+
 /* ==========================================
    Raycaster
 ========================================== */
@@ -912,6 +895,13 @@ function animate() {
 
     rubiksCube.rotation.x = currentRotationX;
     rubiksCube.rotation.y = currentRotationY;
+    
+    if (
+    Math.abs(targetRotationX - currentRotationX) < 0.01 &&
+    Math.abs(targetRotationY - currentRotationY) < 0.01
+) {
+    cubeAnimating = false;
+}
 
     renderer.render(scene, camera);
 
@@ -946,6 +936,5 @@ window.addEventListener(
 
     }
 );
-
 
 
