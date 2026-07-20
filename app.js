@@ -620,7 +620,7 @@ controls.enableRotate = false;
 controls.enableZoom = false;
 controls.enablePan = false;
 
-camera.position.set(4.5, 4.5, 4.5);
+camera.position.set(0,0,8);
 camera.lookAt(0,0,0);
 
 
@@ -921,5 +921,6 @@ window.addEventListener(
 
     }
 );
+
 
 
