@@ -8,13 +8,17 @@ export class CubeRotation {
 
         this.animating = false;
 
-        this.targetQuaternion = new THREE.Quaternion();
+        this.currentQuaternion = new THREE.Quaternion();
 
-        this.targetQuaternion.copy(this.cube.quaternion);
+this.currentQuaternion.copy(this.cube.quaternion);
 
-        this.rotationAngle = Math.PI / 2;
+this.targetQuaternion = new THREE.Quaternion();
 
-        this.rotationSpeed = 0.12;
+this.targetQuaternion.copy(this.cube.quaternion);
+
+this.faceIndex = 0;
+
+this.rotationSpeed = 0.12;
 
     }
     
@@ -54,7 +58,7 @@ rotate(direction) {
 
     const rotation = new THREE.Quaternion();
 
-    rotation.setFromAxisAngle(axis, this.rotationAngle);
+    rotation.setFromAxisAngle(axis, Math.PI / 2);
 
     this.targetQuaternion.copy(this.cube.quaternion);
 
