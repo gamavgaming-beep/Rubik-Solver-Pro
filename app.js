@@ -684,6 +684,7 @@ cubie.userData = {
     z,
 
     painted: [null, null, null, null, null, null],
+    original: [null, null, null, null, null, null],
 
     stickers: [
         { face: "R", index: -1 },
@@ -915,5 +916,4 @@ window.addEventListener(
 
     }
 );
-
 
