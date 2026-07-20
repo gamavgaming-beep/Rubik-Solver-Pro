@@ -611,6 +611,9 @@ const controls = new OrbitControls(
     renderer.domElement
 );
 
+controls.target.set(0, 0, 0);
+controls.update();
+
 controls.enableDamping = false;
 
 controls.enableRotate = false;
@@ -703,6 +706,8 @@ rubiksCube.add(cubie);
 }
 
 scene.add(rubiksCube);
+
+rubiksCube.position.set(0, 0, 0);
 
 const stickers = [];
 
