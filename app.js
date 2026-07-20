@@ -814,22 +814,6 @@ const faceIndex = Math.floor(hit.faceIndex / 2);
 
 const previousColor = cubie.userData.painted[faceIndex];
 
-if (previousColor === appState.selectedColor) {
-    return;
-}
-
-if (previousColor) {
-    colorUsage[previousColor]--;
-}
-
-cubie.userData.painted[faceIndex] = appState.selectedColor;
-
-colorUsage[appState.selectedColor]++;
-
-cubie.material[faceIndex].color.setHex(
-    colorMap[appState.selectedColor]
-);
-
 const faceLetter = ["R","L","U","D","F","B"][faceIndex];
 
 const x = cubie.userData.x;
@@ -846,6 +830,30 @@ if (
 ) {
     return;
 }
+
+if (
+    previousColor !== appState.selectedColor &&
+    colorUsage[appState.selectedColor] >= 9
+) {
+    showToast(appState.selectedColor + " limit reached (9/9)");
+    return;
+}
+
+if (previousColor === appState.selectedColor) {
+    return;
+}
+
+if (previousColor) {
+    colorUsage[previousColor]--;
+}
+
+cubie.userData.painted[faceIndex] = appState.selectedColor;
+
+colorUsage[appState.selectedColor]++;
+
+cubie.material[faceIndex].color.setHex(
+    colorMap[appState.selectedColor]
+);
 
 const stickerIndex = getStickerIndex(cubie, faceLetter);
 
@@ -907,4 +915,5 @@ window.addEventListener(
 
     }
 );
+
 
