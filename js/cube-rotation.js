@@ -28,19 +28,27 @@ rotate(direction) {
 
     switch (direction) {
 
-        case "right":
-            axis.set(0, 1, 0);
-            break;
+    case "right":
+        axis.set(0, 1, 0);
+        break;
 
-        case "up":
-            axis.set(1, 0, 0);
-            break;
+    case "left":
+        axis.set(0, -1, 0);
+        break;
 
-        default:
-            this.animating = false;
-            return;
+    case "up":
+        axis.set(1, 0, 0);
+        break;
 
-    }
+    case "down":
+        axis.set(-1, 0, 0);
+        break;
+
+    default:
+        this.animating = false;
+        return;
+
+}
 
     axis.applyQuaternion(this.cube.quaternion);
 
