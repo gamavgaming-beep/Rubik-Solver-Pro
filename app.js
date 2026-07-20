@@ -814,6 +814,10 @@ const faceIndex = Math.floor(hit.faceIndex / 2);
 
 const previousColor = cubie.userData.painted[faceIndex];
 
+if (previousColor === appState.selectedColor) {
+    return;
+}
+
 if (previousColor) {
     colorUsage[previousColor]--;
 }
