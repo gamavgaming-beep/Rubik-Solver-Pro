@@ -80,6 +80,8 @@ async function startSplash() {
 
     splashScreen.classList.add("hidden");
 
+alert("Splash finished");
+
 mainApp.classList.remove("hidden");
 
 setTimeout(() => {
@@ -903,4 +905,5 @@ window.addEventListener(
 
     }
 );
+
 
