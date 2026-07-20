@@ -4,23 +4,17 @@ export class CubeRotation {
 
     constructor(rubiksCube) {
 
-        this.cube = rubiksCube;
+    this.cube = rubiksCube;
 
-        this.animating = false;
+    this.animating = false;
 
-        this.currentQuaternion = new THREE.Quaternion();
+    this.rotationSpeed = 0.12;
 
-this.currentQuaternion.copy(this.cube.quaternion);
+    this.currentQuaternion = this.cube.quaternion.clone();
 
-this.targetQuaternion = new THREE.Quaternion();
+    this.targetQuaternion = this.cube.quaternion.clone();
 
-this.targetQuaternion.copy(this.cube.quaternion);
-
-this.faceIndex = 0;
-
-this.rotationSpeed = 0.12;
-
-    }
+}
     
 rotate(direction) {
 
@@ -54,7 +48,7 @@ rotate(direction) {
 
 }
 
-    axis.applyQuaternion(this.cube.quaternion);
+    //axis.applyQuaternion(this.cube.quaternion);
 
     const rotation = new THREE.Quaternion();
 
