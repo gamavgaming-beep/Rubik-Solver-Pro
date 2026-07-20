@@ -826,23 +826,61 @@ function animate() {
 
 animate();
 
-nextFaceBtn.addEventListener("click", () => {
+const rotationSequence = [
+    "right",
+    "up",
+    "right",
+    "right",
+    "up"
+];
 
-    if (!cubeRotation.isAnimating()) {
+function showCurrentFace() {
 
-        cubeRotation.rotate("right");
+    updateFaceCounter();
+
+}
+
+function rotateBack(direction) {
+
+    if (direction === "right") {
+
+        cubeRotation.rotate("left");
+
+    } else if (direction === "up") {
+
+        cubeRotation.rotate("down");
 
     }
+
+}
+
+nextFaceBtn.addEventListener("click", () => {
+
+    if (cubeRotation.isAnimating()) return;
+
+    if (appState.currentFace >= 5) return;
+
+    cubeRotation.rotate(
+        rotationSequence[appState.currentFace]
+    );
+
+    appState.currentFace++;
+
+    showCurrentFace();
 
 });
 
 previousFaceBtn.addEventListener("click", () => {
 
-    if (!cubeRotation.isAnimating()) {
+    if (cubeRotation.isAnimating()) return;
 
-        cubeRotation.rotate("up");
+    if (appState.currentFace <= 0) return;
 
-    }
+    appState.currentFace--;
+    
+    rotateBack(rotationSequence[appState.currentFace]);
+
+    showCurrentFace();
 
 });
 
@@ -873,5 +911,6 @@ window.addEventListener(
 
     }
 );
+
 
 
