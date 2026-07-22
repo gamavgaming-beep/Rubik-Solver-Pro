@@ -15,6 +15,8 @@ export class CubeRotation {
         this.targetQuaternion = this.cube.quaternion.clone();
 
         this.currentView = 0;
+        
+        this.views = [];
 
         this.sequence = [
             "right",
@@ -28,47 +30,52 @@ export class CubeRotation {
     
     rotate(direction) {
 
-        if (this.animating) return;
+    if (this.animating) return;
 
-        this.animating = true;
+    this.animating = true;
 
-        const axis = new THREE.Vector3();
+    this.currentQuaternion.copy(this.cube.quaternion);
 
-        switch (direction) {
+    const axis = new THREE.Vector3();
 
-            case "right":
-                axis.set(0, 1, 0);
-                break;
+    switch (direction) {
 
-            case "left":
-                axis.set(0, -1, 0);
-                break;
+        case "right":
+            axis.set(0, 1, 0);
+            break;
 
-            case "up":
-                axis.set(1, 0, 0);
-                break;
+        case "left":
+            axis.set(0, -1, 0);
+            break;
 
-            case "down":
-                axis.set(-1, 0, 0);
-                break;
+        case "up":
+            axis.set(1, 0, 0);
+            break;
 
-            default:
-                this.animating = false;
-                return;
+        case "down":
+            axis.set(-1, 0, 0);
+            break;
 
-        }
-
-        const rotation = new THREE.Quaternion();
-
-        rotation.setFromAxisAngle(axis, Math.PI / 2);
-
-        this.targetQuaternion.copy(this.cube.quaternion);
-
-        this.targetQuaternion.multiply(rotation);
-
-        this.targetQuaternion.normalize();
+        default:
+            this.animating = false;
+            return;
 
     }
+
+    // Rotate using current cube orientation
+    axis.applyQuaternion(this.currentQuaternion);
+
+    const rotation = new THREE.Quaternion();
+
+    rotation.setFromAxisAngle(axis.normalize(), Math.PI / 2);
+
+    this.targetQuaternion.copy(this.currentQuaternion);
+
+    this.targetQuaternion.premultiply(rotation);
+
+    this.targetQuaternion.normalize();
+
+}
     
     update() {
 
