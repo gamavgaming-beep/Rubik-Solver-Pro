@@ -4,95 +4,101 @@ export class CubeRotation {
 
     constructor(rubiksCube) {
 
-    this.cube = rubiksCube;
+        this.cube = rubiksCube;
 
-    this.animating = false;
-
-    this.rotationSpeed = 0.12;
-
-    this.currentQuaternion = this.cube.quaternion.clone();
-
-    this.targetQuaternion = this.cube.quaternion.clone();
-
-}
-    
-rotate(direction) {
-
-    if (this.animating) return;
-
-    this.animating = true;
-
-    const axis = new THREE.Vector3();
-
-    switch (direction) {
-
-    case "right":
-        axis.set(0, 1, 0);
-        break;
-
-    case "left":
-        axis.set(0, -1, 0);
-        break;
-
-    case "up":
-        axis.set(1, 0, 0);
-        break;
-
-    case "down":
-        axis.set(-1, 0, 0);
-        break;
-
-    default:
         this.animating = false;
-        return;
 
-}
+        this.rotationSpeed = 0.12;
 
-    axis.normalize();
-axis.applyQuaternion(this.cube.quaternion);
-axis.normalize();
+        this.currentQuaternion = this.cube.quaternion.clone();
 
-    const rotation = new THREE.Quaternion();
+        this.targetQuaternion = this.cube.quaternion.clone();
 
-    rotation.setFromAxisAngle(axis, Math.PI / 2);
+        this.currentView = 0;
 
-    this.targetQuaternion.copy(this.cube.quaternion);
+        this.sequence = [
+            "right",
+            "up",
+            "right",
+            "right",
+            "up"
+        ];
 
-    this.targetQuaternion.multiply(rotation);
+    }
+    
+    rotate(direction) {
 
-this.targetQuaternion.normalize();
+        if (this.animating) return;
 
-}
+        this.animating = true;
 
-update() {
+        const axis = new THREE.Vector3();
 
-    if (!this.animating) return;
+        switch (direction) {
 
-    this.cube.quaternion.slerp(
-        this.targetQuaternion,
-        this.rotationSpeed
-    );
+            case "right":
+                axis.set(0, 1, 0);
+                break;
 
-    if (
-        this.cube.quaternion.angleTo(
-            this.targetQuaternion
-        ) < 0.01
-    ) {
+            case "left":
+                axis.set(0, -1, 0);
+                break;
 
-        this.cube.quaternion.copy(
-            this.targetQuaternion
+            case "up":
+                axis.set(1, 0, 0);
+                break;
+
+            case "down":
+                axis.set(-1, 0, 0);
+                break;
+
+            default:
+                this.animating = false;
+                return;
+
+        }
+
+        const rotation = new THREE.Quaternion();
+
+        rotation.setFromAxisAngle(axis, Math.PI / 2);
+
+        this.targetQuaternion.copy(this.cube.quaternion);
+
+        this.targetQuaternion.multiply(rotation);
+
+        this.targetQuaternion.normalize();
+
+    }
+    
+    update() {
+
+        if (!this.animating) return;
+
+        this.cube.quaternion.slerp(
+            this.targetQuaternion,
+            this.rotationSpeed
         );
 
-        this.animating = false;
+        if (
+            this.cube.quaternion.angleTo(
+                this.targetQuaternion
+            ) < 0.01
+        ) {
+
+            this.cube.quaternion.copy(
+                this.targetQuaternion
+            );
+
+            this.animating = false;
+
+        }
 
     }
 
-}
+    isAnimating() {
 
-isAnimating() {
+        return this.animating;
 
-    return this.animating;
-
-}
+    }
 
 }
