@@ -48,7 +48,9 @@ rotate(direction) {
 
 }
 
-    //axis.applyQuaternion(this.cube.quaternion);
+    axis.normalize();
+axis.applyQuaternion(this.cube.quaternion);
+axis.normalize();
 
     const rotation = new THREE.Quaternion();
 
@@ -57,6 +59,8 @@ rotate(direction) {
     this.targetQuaternion.copy(this.cube.quaternion);
 
     this.targetQuaternion.multiply(rotation);
+
+this.targetQuaternion.normalize();
 
 }
 
