@@ -918,7 +918,7 @@ async function solveCube(cubeState) {
 
         alert("Cube created");
 
-        const solution = cube.solve();
+        const solution = cube.solve(22);
 
         alert("Solver finished");
 
