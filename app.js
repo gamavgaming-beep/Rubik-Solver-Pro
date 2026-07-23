@@ -453,11 +453,14 @@ function validateCube() {
 
     }
 
-    appState.cubeValidated = true;
+    console.log(counts);
+alert(JSON.stringify(counts));
 
-    showToast("Cube validation successful.");
+appState.cubeValidated = true;
 
-    return true;
+showToast("Cube validation successful.");
+
+return true;
 
 }
 
@@ -928,5 +931,6 @@ window.addEventListener(
 
     }
 );
+
 
 
