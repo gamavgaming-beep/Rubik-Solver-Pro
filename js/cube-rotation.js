@@ -15,8 +15,6 @@ export class CubeRotation {
         this.targetQuaternion = this.cube.quaternion.clone();
 
         this.currentView = 0;
-        
-        this.views = [];
 
         this.sequence = [
             "right",
@@ -36,24 +34,36 @@ export class CubeRotation {
 
     this.currentQuaternion.copy(this.cube.quaternion);
 
-    const axis = new THREE.Vector3();
+    const rotation = new THREE.Quaternion();
 
     switch (direction) {
 
         case "right":
-            axis.set(0, 1, 0);
+            rotation.setFromAxisAngle(
+                new THREE.Vector3(0, 1, 0),
+                -Math.PI / 2
+            );
             break;
 
         case "left":
-            axis.set(0, -1, 0);
+            rotation.setFromAxisAngle(
+                new THREE.Vector3(0, 1, 0),
+                Math.PI / 2
+            );
             break;
 
         case "up":
-            axis.set(1, 0, 0);
+            rotation.setFromAxisAngle(
+                new THREE.Vector3(1, 0, 0),
+                Math.PI / 2
+            );
             break;
 
         case "down":
-            axis.set(-1, 0, 0);
+            rotation.setFromAxisAngle(
+                new THREE.Vector3(1, 0, 0),
+                -Math.PI / 2
+            );
             break;
 
         default:
@@ -62,17 +72,8 @@ export class CubeRotation {
 
     }
 
-    // Rotate using current cube orientation
-    axis.applyQuaternion(this.currentQuaternion);
-
-    const rotation = new THREE.Quaternion();
-
-    rotation.setFromAxisAngle(axis.normalize(), Math.PI / 2);
-
     this.targetQuaternion.copy(this.currentQuaternion);
-
-    this.targetQuaternion.premultiply(rotation);
-
+    this.targetQuaternion.multiply(rotation);
     this.targetQuaternion.normalize();
 
 }
