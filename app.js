@@ -443,15 +443,15 @@ function validateCube() {
 
     for (const face of Object.keys(counts)) {
 
-        if (counts[face] !== 9) {
+    if (counts[face] !== 9) {
 
-            showToast(`${face} color must appear exactly 9 times.`);
+        alert(face + " = " + counts[face]);
 
-            return false;
-
-        }
+        return false;
 
     }
+
+}
 
     console.log(counts);
 alert(JSON.stringify(counts));
