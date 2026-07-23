@@ -1,91 +1,145 @@
-/**
- * Cube Rotation Engine with Sequential Screen-Relative Step Tracking
- */
+import * as THREE from "three";
 
-// Sequence: RIGHT -> UP -> RIGHT -> RIGHT -> UP
-const customSequence = ['RIGHT', 'UP', 'RIGHT', 'RIGHT', 'UP'];
+export class CubeRotation {
 
-let currentSeqIndex = 0;
-let rotationHistoryStack = [];
+    constructor(rubiksCube) {
 
-/**
- * Handle Next and Previous step triggers
- */
-function handleCubeStep(direction) {
-  if (typeof rubiksCubeGroup === 'undefined' || !rubiksCubeGroup || typeof camera === 'undefined' || !camera) {
-    return;
-  }
+        this.cube = rubiksCube;
 
-  if (direction === 'NEXT') {
-    if (currentSeqIndex < customSequence.length) {
-      const action = customSequence[currentSeqIndex];
+        this.animating = false;
 
-      // Save previous quaternion state for smooth reverse
-      if (typeof targetQuaternion !== 'undefined') {
-        rotationHistoryStack.push(targetQuaternion.clone());
-      } else {
-        rotationHistoryStack.push(rubiksCubeGroup.quaternion.clone());
-      }
+        this.rotationSpeed = 0.12;
 
-      applyScreenRelativeRotation(action);
-      currentSeqIndex++;
+        this.currentQuaternion = this.cube.quaternion.clone();
+
+        this.targetQuaternion = this.cube.quaternion.clone();
+
+        this.currentView = 0;
+
+        this.sequence = [
+            "right",
+            "up",
+            "right",
+            "right",
+            "up"
+        ];
+
+        // History array to store previous target quaternions for reverse operation
+        this.history = [];
+
     }
-  } else if (direction === 'PREVIOUS') {
-    if (rotationHistoryStack.length > 0) {
-      const prevQuat = rotationHistoryStack.pop();
-      if (typeof targetQuaternion !== 'undefined') {
-        targetQuaternion.copy(prevQuat);
-      } else {
-        rubiksCubeGroup.quaternion.copy(prevQuat);
-      }
-      
-      if (typeof isCubeRotating !== 'undefined') {
-        isCubeRotating = true;
-      }
 
-      if (currentSeqIndex > 0) {
-        currentSeqIndex--;
-      }
+    // Sequence-la irundhu NEXT step rotate panna
+    next() {
+        if (this.animating || this.currentView >= this.sequence.length) return;
+
+        const direction = this.sequence[this.currentView];
+        
+        // Push current target to history before moving to next step
+        this.history.push(this.targetQuaternion.clone());
+        
+        this.rotate(direction);
+        this.currentView++;
     }
-  }
+
+    // Previous step-ku exact-a REVERSE panna
+    previous() {
+        if (this.animating || this.history.length === 0) return;
+
+        this.animating = true;
+        this.currentQuaternion.copy(this.cube.quaternion);
+
+        // Pop the previous exact quaternion state
+        const prevTarget = this.history.pop();
+        this.targetQuaternion.copy(prevTarget);
+
+        if (this.currentView > 0) {
+            this.currentView--;
+        }
+    }
+
+    rotate(direction) {
+
+        if (this.animating) return;
+
+        this.animating = true;
+
+        this.currentQuaternion.copy(this.cube.quaternion);
+
+        const rotation = new THREE.Quaternion();
+
+        switch (direction) {
+
+            case "right":
+                rotation.setFromAxisAngle(
+                    new THREE.Vector3(0, 1, 0),
+                    -Math.PI / 2
+                );
+                break;
+
+            case "left":
+                rotation.setFromAxisAngle(
+                    new THREE.Vector3(0, 1, 0),
+                    Math.PI / 2
+                );
+                break;
+
+            case "up":
+                rotation.setFromAxisAngle(
+                    new THREE.Vector3(1, 0, 0),
+                    Math.PI / 2
+                );
+                break;
+
+            case "down":
+                rotation.setFromAxisAngle(
+                    new THREE.Vector3(1, 0, 0),
+                    -Math.PI / 2
+                );
+                break;
+
+            default:
+                this.animating = false;
+                return;
+
+        }
+
+        // PREMULTIPLY applies screen/camera-relative rotation
+        // Idhu dhaan unga Quaternion sequence values-a exact-a matching panna vaikkum
+        this.targetQuaternion.premultiply(rotation);
+        this.targetQuaternion.normalize();
+
+    }
+
+    update() {
+
+        if (!this.animating) return;
+
+        this.cube.quaternion.slerp(
+            this.targetQuaternion,
+            this.rotationSpeed
+        );
+
+        if (
+            this.cube.quaternion.angleTo(
+                this.targetQuaternion
+            ) < 0.01
+        ) {
+
+            this.cube.quaternion.copy(
+                this.targetQuaternion
+            );
+
+            this.animating = false;
+
+        }
+
+    }
+
+    isAnimating() {
+
+        return this.animating;
+
+    }
+
 }
-
-/**
- * Apply rotation based on Camera Screen-Relative Axis
- */
-function applyScreenRelativeRotation(action) {
-  const cameraRight = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
-  const cameraUp = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
-
-  const qDelta = new THREE.Quaternion();
-  const angle = Math.PI / 2; // 90 deg
-
-  switch (action) {
-    case 'RIGHT':
-      qDelta.setFromAxisAngle(cameraUp, -angle);
-      break;
-    case 'LEFT':
-      qDelta.setFromAxisAngle(cameraUp, angle);
-      break;
-    case 'UP':
-      qDelta.setFromAxisAngle(cameraRight, angle);
-      break;
-    case 'DOWN':
-      qDelta.setFromAxisAngle(cameraRight, -angle);
-      break;
-  }
-
-  if (typeof targetQuaternion !== 'undefined') {
-    targetQuaternion.premultiply(qDelta);
-  } else {
-    rubiksCubeGroup.quaternion.premultiply(qDelta);
-  }
-
-  if (typeof isCubeRotating !== 'undefined') {
-    isCubeRotating = true;
-  }
-}
-
-// Global Exports
-window.handleCubeStep = handleCubeStep;
-window.applyScreenRelativeRotation = applyScreenRelativeRotation;
