@@ -916,13 +916,17 @@ async function solveCube(cubeState) {
 
         const cube = Cube.fromString(cubeString);
 
-        alert("Cube created");
+alert("Cube created");
 
-        const solution = cube.solve(22);
+alert(cube.isSolved());
 
-        alert("Solver finished");
+alert(cube.asString());
 
-        alert(solution);
+const solution = cube.solve(22);
+
+alert("Solver finished");
+
+alert(solution);
 
     } catch (e) {
 
@@ -971,7 +975,6 @@ window.addEventListener(
 
     }
 );
-
 
 
 
