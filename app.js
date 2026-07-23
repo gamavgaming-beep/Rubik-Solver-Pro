@@ -404,6 +404,8 @@ function updateValidateButton() {
 
 function validateCube() {
 
+    console.log("validateCube called");
+
     const counts = {
         U: 0,
         R: 0,
@@ -465,9 +467,16 @@ function validateCube() {
 
 validateBtn.addEventListener("click", () => {
 
+    alert("Validate button clicked");
+
+    console.log("Validate button clicked");
+
     if (validateCube()) {
 
+        alert("Validation Success");
+
         solveBtn.disabled = false;
+        solveBtn.classList.remove("hidden");
 
     }
 
