@@ -906,6 +906,8 @@ previousFaceBtn.addEventListener("click", () => {
 
 async function solveCube(cubeState) {
 
+    alert("Solve button clicked");
+
     console.log("Cube solving started...");
 
 }
