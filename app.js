@@ -910,6 +910,26 @@ async function solveCube(cubeState) {
 
     console.log("Cube solving started...");
 
+    const cubeString = getCubeString();
+
+    alert(cubeString);
+
+}
+
+function getCubeString() {
+
+    let result = "";
+
+    const order = ["U", "R", "F", "D", "L", "B"];
+
+    for (const face of order) {
+
+        result += cubeState[face].join("");
+
+    }
+
+    return result;
+
 }
 
 /* ==========================================
@@ -933,6 +953,7 @@ window.addEventListener(
 
     }
 );
+
 
 
 
