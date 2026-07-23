@@ -908,17 +908,29 @@ async function solveCube(cubeState) {
 
     alert("Solve button clicked");
 
-    console.log("Cube solving started...");
-
     const cubeString = getCubeString();
 
     alert(cubeString);
-    
-const cube = Cube.fromString(cubeString);
 
-const solution = cube.solve();
+    try {
 
-alert(solution);
+        const cube = Cube.fromString(cubeString);
+
+        alert("Cube created");
+
+        const solution = cube.solve();
+
+        alert("Solver finished");
+
+        alert(solution);
+
+    } catch (e) {
+
+        alert(e.message);
+
+        console.error(e);
+
+    }
 
 }
 
