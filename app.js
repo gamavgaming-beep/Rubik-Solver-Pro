@@ -913,6 +913,12 @@ async function solveCube(cubeState) {
     const cubeString = getCubeString();
 
     alert(cubeString);
+    
+const cube = Cube.fromString(cubeString);
+
+const solution = cube.solve();
+
+alert(solution);
 
 }
 
