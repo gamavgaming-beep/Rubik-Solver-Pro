@@ -106,8 +106,11 @@ export class CubeRotation {
 
         // PREMULTIPLY applies screen/camera-relative rotation
         // Idhu dhaan unga Quaternion sequence values-a exact-a matching panna vaikkum
-        this.targetQuaternion.premultiply(rotation);
-        this.targetQuaternion.normalize();
+        this.targetQuaternion.copy(this.currentQuaternion);
+
+this.targetQuaternion.premultiply(rotation);
+
+this.targetQuaternion.normalize();
 
     }
 
