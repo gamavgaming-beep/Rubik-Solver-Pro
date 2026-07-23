@@ -1,112 +1,67 @@
-import * as THREE from "three";
+// Sequence definition: Right -> Up -> Right -> Right -> Up
+const sequenceSteps = ['RIGHT', 'UP', 'RIGHT', 'RIGHT', 'UP'];
 
-export class CubeRotation {
+// Current step tracker and history stack for reverse tracking
+let currentStepIndex = 0;
+let rotationHistory = [];
 
-    constructor(rubiksCube) {
+/**
+ * Perform Rotation based on Direction ('NEXT' or 'PREVIOUS')
+ */
+function handleCubeStep(direction) {
+  if (!rubiksCubeGroup || !camera) return;
 
-        this.cube = rubiksCube;
-
-        this.animating = false;
-
-        this.rotationSpeed = 0.12;
-
-        this.currentQuaternion = this.cube.quaternion.clone();
-
-        this.targetQuaternion = this.cube.quaternion.clone();
-
-        this.currentView = 0;
-
-        this.sequence = [
-            "right",
-            "up",
-            "right",
-            "right",
-            "up"
-        ];
-
+  if (direction === 'NEXT') {
+    if (currentStepIndex < sequenceSteps.length) {
+      const action = sequenceSteps[currentStepIndex];
+      
+      // Save current orientation before applying new rotation (For smooth undo/reverse)
+      rotationHistory.push(targetQuaternion.clone());
+      
+      // Execute the rotation
+      applyRelativeRotation(action);
+      currentStepIndex++;
     }
-    
-    rotate(direction) {
-
-    if (this.animating) return;
-
-    this.animating = true;
-
-    this.currentQuaternion.copy(this.cube.quaternion);
-
-    const rotation = new THREE.Quaternion();
-
-    switch (direction) {
-
-        case "right":
-            rotation.setFromAxisAngle(
-                new THREE.Vector3(0, 1, 0),
-                -Math.PI / 2
-            );
-            break;
-
-        case "left":
-            rotation.setFromAxisAngle(
-                new THREE.Vector3(0, 1, 0),
-                Math.PI / 2
-            );
-            break;
-
-        case "up":
-            rotation.setFromAxisAngle(
-                new THREE.Vector3(1, 0, 0),
-                Math.PI / 2
-            );
-            break;
-
-        case "down":
-            rotation.setFromAxisAngle(
-                new THREE.Vector3(1, 0, 0),
-                -Math.PI / 2
-            );
-            break;
-
-        default:
-            this.animating = false;
-            return;
-
+  } 
+  else if (direction === 'PREVIOUS') {
+    if (rotationHistory.length > 0) {
+      // Pop previous quaternion state and restore it
+      const prevQuaternion = rotationHistory.pop();
+      targetQuaternion.copy(prevQuaternion);
+      isCubeRotating = true;
+      
+      if (currentStepIndex > 0) {
+        currentStepIndex--;
+      }
     }
-
-    this.targetQuaternion.copy(this.currentQuaternion);
-    this.targetQuaternion.multiply(rotation);
-    this.targetQuaternion.normalize();
-
+  }
 }
-    
-    update() {
 
-        if (!this.animating) return;
+/**
+ * Camera-relative screen rotation engine
+ */
+function applyRelativeRotation(action) {
+  const cameraRight = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+  const cameraUp = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
 
-        this.cube.quaternion.slerp(
-            this.targetQuaternion,
-            this.rotationSpeed
-        );
+  const qDelta = new THREE.Quaternion();
+  const angle = Math.PI / 2; // 90 degrees
 
-        if (
-            this.cube.quaternion.angleTo(
-                this.targetQuaternion
-            ) < 0.01
-        ) {
+  switch (action) {
+    case 'RIGHT':
+      qDelta.setFromAxisAngle(cameraUp, -angle);
+      break;
+    case 'LEFT':
+      qDelta.setFromAxisAngle(cameraUp, angle);
+      break;
+    case 'UP':
+      qDelta.setFromAxisAngle(cameraRight, angle);
+      break;
+    case 'DOWN':
+      qDelta.setFromAxisAngle(cameraRight, -angle);
+      break;
+  }
 
-            this.cube.quaternion.copy(
-                this.targetQuaternion
-            );
-
-            this.animating = false;
-
-        }
-
-    }
-
-    isAnimating() {
-
-        return this.animating;
-
-    }
-
+  targetQuaternion.premultiply(qDelta);
+  isCubeRotating = true;
 }
