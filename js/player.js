@@ -108,16 +108,3 @@ function resetPlayer() {
 
 
 
-// Add this at the bottom of js/player.js
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Next Button Click Listener
-  document.getElementById('btn-next')?.addEventListener('click', () => {
-    handleCubeStep('NEXT');
-  });
-
-  // Previous Button Click Listener
-  document.getElementById('btn-previous')?.addEventListener('click', () => {
-    handleCubeStep('PREVIOUS');
-  });
-});
