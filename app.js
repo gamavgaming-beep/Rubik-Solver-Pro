@@ -926,6 +926,8 @@ alert(cube.isSolved());
 
 alert(cube.asString());
 
+alert(cubeString === cube.asString());
+
 const solution = cube.solve(22);
 
 alert("Solver finished");
